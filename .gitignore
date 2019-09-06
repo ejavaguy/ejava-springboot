@@ -1,0 +1,7 @@
+target
+.directory
+.project
+.classpath
+.settings
+*.swp
+hs_err_pid*.log

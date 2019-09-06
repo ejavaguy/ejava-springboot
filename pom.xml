@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>info.ejava.examples</groupId>
+    <artifactId>examples-root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Examples::Root</name>
+    <description>
+        This project provides the root for all example and exercise source code modules.
+    </description>
+
+    <modules>
+        <module>firsttry</module>
+        <module>springboot-intro</module>
+    </modules>
+
+    <properties>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>markdown</id>
+            <activation>
+                <file>
+                    <exists>src/markdown</exists>
+                </file>
+            </activation>
+
+            <properties>
+                <markdown.inputPaths>${project.artifactId}/src/markdown/.*.md</markdown.inputPaths>
+            </properties>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>spring-plugins</id>
+                    <name>Spring Plugins Repository</name>
+                    <url>https://repo.spring.io/plugins-release/</url>
+                    <releases>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>se.natusoft.tools.doc.markdowndoc</groupId>
+                            <artifactId>markdowndoc-maven-plugin</artifactId>
+                            <version>2.1.2</version>
+                            <executions>
+                                <execution>
+                                    <id>generate-html</id>
+                                    <goals>
+                                        <goal>doc</goal>
+                                    </goals>
+                                    <phase>site</phase>
+                                    <configuration>
+                        
+                                        <generatorOptions>
+                                            <generator>html</generator>
+                                            <inputPaths>${markdown.inputPaths}</inputPaths>
+                                        </generatorOptions>
+                                        
+                                        <htmlGeneratorOptions>
+                                            <resultFile>${project.build.directory}/site/README.html</resultFile>
+                                        </htmlGeneratorOptions>
+                                    </configuration>
+                                </execution>
+
+                                <execution>
+                                    <id>generate-md</id>
+                                    <goals>
+                                        <goal>doc</goal>
+                                    </goals>
+                                    <phase>site</phase>
+                                    <configuration>
+                        
+                                        <generatorOptions>
+                                            <generator>md</generator>
+                                            <inputPaths>${markdown.inputPaths}</inputPaths>
+                                        </generatorOptions>
+                                        
+                                        <mdGeneratorOptions>
+                                            <resultFile>${project.build.directory}/README.md</resultFile>
+                                        </mdGeneratorOptions>
+                                    </configuration>
+                                </execution>
+
+                                <execution>
+                                    <id>generate-pdf</id>
+                                    <goals>
+                                        <goal>doc</goal>
+                                    </goals>
+                                    <phase>site</phase>
+                                    <configuration>
+                        
+                                        <generatorOptions>
+                                            <generator>pdf</generator>
+                                            <inputPaths>${markdown.inputPaths}</inputPaths>
+                                        </generatorOptions>
+                                        
+                                        <pdfGeneratorOptions>
+                                            <resultFile>${project.build.directory}/${project.artifactId}.pdf</resultFile>
+                                            <generateTOC>true</generateTOC>
+                                        </pdfGeneratorOptions>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                <!--
+                    <plugin>
+                      <artifactId>maven-antrun-plugin</artifactId>
+                      <executions>
+                        <execution>
+                          <phase>package</phase>
+                          <configuration>
+                            <tasks>
+                              <mkdir dir="target/site"/>
+                            </tasks>
+                          </configuration>
+                          <goals>
+                            <goal>run</goal>
+                          </goals>
+                        </execution>
+                      </executions>
+                    </plugin>
+                -->
+
+                    <plugin>
+                        <groupId>se.natusoft.tools.doc.markdowndoc</groupId>
+                        <artifactId>markdowndoc-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
+</project>
