@@ -1,0 +1,3 @@
+race:
+  priority:
+    source: application-dev.yml

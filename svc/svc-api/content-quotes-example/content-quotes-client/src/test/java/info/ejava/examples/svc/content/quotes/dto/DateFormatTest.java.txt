@@ -1,0 +1,818 @@
+package info.ejava.examples.svc.content.quotes.dto;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import javax.xml.bind.JAXBException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.util.stream.Stream;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
+@Slf4j
+public class DateFormatTest {
+    private static final String DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+    private static final ZoneId UTC_ZONE_ID = ZoneId.of("UTC");
+    private static final ZoneId EST_ZONE_ID = ZoneId.of("EST", ZoneId.SHORT_IDS);
+    private static final TimeZone UTC_TZ = TimeZone.getTimeZone("UTC");
+    private static final TimeZone EST_TZ = TimeZone.getTimeZone("EST");
+
+
+    private static Date get_date(boolean withMsecs) {
+        Calendar cal = new Calendar.Builder()
+                .setDate(1776, Calendar.JULY, 4)
+                .setTimeOfDay(0, 0, 0, withMsecs ? 123 : 0)
+                .setTimeZone(UTC_TZ)
+                .build();
+        return cal.getTime();
+    }
+
+    /**
+     * This test is just to get a base set of understanding between
+     * java.util times and java.time. Nothing big going on here.
+     */
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+@Test
+    public void calendar_to_instant() {
+        //given - a date created using a calendar at UTC
+        Date utilDate = get_date(true);
+
+        //and - a Java ZonedDateTime
+        ZonedDateTime zdt = ZonedDateTime.of(1776, 7, 4,
+                0, 0, 0,
+                123 * 1_000_000, UTC_ZONE_ID);
+        //and - a Java LocalDateTime
+        LocalDateTime ldt = LocalDateTime.of(1776, 7,4,
+                0,0,0, 123*1_000_000);
+
+        //Calendar and ZonedDateTime.Instant() have the same value
+        assertThat(zdt.toInstant()).isEqualTo(utilDate.toInstant());
+        //LocalDateTime (lacking a location) will have same value when calc for that TZ
+        assertThat(ldt.toInstant(ZoneOffset.UTC)).isEqualTo(utilDate.toInstant());
+    }
+
+    /**
+     * This test is showing the relation between a java.util.Date and a java.time.Instant.
+     * A java.util.Date is just a timestamp and lacks TZ information. Anything produced
+     * by default is based on the assumption of the called method -- like toString().
+     * If we take that date/timestamp and assign it to a TZ, we have the same timestamp
+     * value, but the representation of the time will be based on the TZ we assign it to.
+     */
+    @Test
+    void date_to_instant() {
+        //date is just a number with no TZ specified -- it is subject to assumptions
+        Date date = get_date(true);
+        //java.date needs to be supplied a TZ in order to convert that to a real date+time
+        ZonedDateTime utcDate = ZonedDateTime.ofInstant(date.toInstant(), UTC_ZONE_ID);
+        ZonedDateTime estDate = ZonedDateTime.ofInstant(date.toInstant(), EST_ZONE_ID);
+
+        /*
+         The date.toString() assumes the timer is UTZ and prints based on
+         what it believes the caller's TZ is. If I am sitting in EST then I will
+         get 7pm on Jul03 because I am ahead of 0am on Jul04 UTC.
+
+         The Instant value of each are the same and Instant.toString() looks to
+         print a value based on UTC.
+         */
+        log.info(String.format("\n%30s %30s\n%30s %30s %30s\n%30s %30s %30s",
+                date, date.toInstant(),
+                utcDate, utcDate.toInstant(), utcDate.toLocalDateTime(),
+                estDate, estDate.toInstant(), estDate.toLocalDateTime())
+        );
+
+        //the points in time are equal
+        assertThat(utcDate).isEqualTo(estDate);
+        //however, when they are represented as a default string, they use associated TZ value
+        //LocateDateTime expresses the timestamp portion that represents a time value, but it
+        //lacks a TZ. The timestamp value extracted from each ZDT, we get the time that was on
+        //the wall clock at that TZ at an instant in time.
+        assertThat(utcDate.toLocalDateTime()).isNotEqualTo(estDate.toLocalDateTime());
+
+        //knowing that UTC is 5hrs ahead of EST, if we add 5hrs before obtaining local time -- equal
+        assertThat(utcDate.minusHours(5).toLocalDateTime()).isEqualTo(estDate.toLocalDateTime());
+    }
+
+    /*
+    When formatting the date without an explicit TZ assigned to the formatter,
+    the formatter expresses the time 5 hours earlier with an offset of -5hrs.
+    When formatting, XX, Z, ZZ, ZZZ are equal
+
+        yyyy-MM-dd'T'HH:mm:ss.SSSX     1776-07-03T19:00:00.123-05
+        yyyy-MM-dd'T'HH:mm:ss.SSSXX    1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXX   1776-07-03T19:00:00.123-05:00
+        yyyy-MM-dd'T'HH:mm:ss.SSSZ     1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZ    1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZ   1776-07-03T19:00:00.123-0500
+     */
+    @ParameterizedTest
+    @MethodSource("simpleDateFormats")
+    public void format_simpleDateFormat_NoTZ(String format) {
+        //given - a UTC date for jul4
+        Date jul4 = get_date(true);
+        //and - a SDF that is not explicitly associated with a TZ
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        //then - the dates printed will with a time @default TZ
+        log.info(String.format("%30s %30s", format, sdf.format(jul4)));
+    }
+
+    /*
+    When formatting the date with an explicit TZ of UTC assigned to the
+    formatter, the formatter expressed the time value as UTC.
+    When formatting, X, XX amd XXX produce a common Z suffix with no offset.
+    Z, ZZ, ZZZ are equal and produce a +0000 offset
+
+        yyyy-MM-dd'T'HH:mm:ss.SSSX        1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSXX       1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXX      1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSZ        1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZ       1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZ      1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ     1776-07-04T00:00:00.123+0000
+
+    However -- when formatting using an SDF assigned to EST, the XX format
+    is equivalent to Z, ZZ, and ZZZ and X and XXX represent offset values
+        yyyy-MM-dd'T'HH:mm:ss.SSSX        1776-07-03T19:00:00.123-05
+        yyyy-MM-dd'T'HH:mm:ss.SSSXX       1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXX      1776-07-03T19:00:00.123-05:00
+        yyyy-MM-dd'T'HH:mm:ss.SSSZ        1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZ       1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZ      1776-07-03T19:00:00.123-0500
+
+     */
+    @ParameterizedTest
+    @MethodSource("simpleDateFormats")
+    public void format_simpleDateFormat_UTC(String format) {
+        Date jul4 = get_date(true);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(UTC_TZ);
+        log.info(String.format("%30s %30s", format, sdf.format(jul4)));
+    }
+    @ParameterizedTest
+    @MethodSource("simpleDateFormats")
+    public void format_simpleDateFormat_EST(String format) {
+        Date jul4 = get_date(true);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(EST_TZ);
+        log.info(String.format("%30s %30s", format, sdf.format(jul4)));
+    }
+
+    /**
+     * SimpleDateFormat did not eliminate the msecs if not present
+     * and does not accept a [.SSS] optional format like
+     * DateTimeFormatter does. -- No impact for both TZ and no TZ
+     */
+    @ParameterizedTest
+    @MethodSource("simpleDateFormats")
+    public void format_simpleDateFormat_NoTZ_NoMsecs(String format) {
+        Date jul4 = get_date(false);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        log.info(String.format("%30s %30s", format, sdf.format(jul4)));
+    }
+    @ParameterizedTest
+    @MethodSource("simpleDateFormats")
+    public void format_simpleDateFormat_TZ_NoMsecs(String format) {
+        Date jul4 = get_date(false);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(UTC_TZ);
+        log.info(String.format("%30s %30s", format, sdf.format(jul4)));
+    }
+    public static Stream<Arguments> simpleDateFormats() {
+        return Stream.of(
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXX"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
+                //Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXXXX"), //invalid format
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ") //same as ZZZ
+        );
+    }
+
+
+    /*
+        This test demonstrates using some of the formats documented for
+        java.time DateTimeFormatter.
+
+        yyyy-MM-dd'T'HH:mm:ss.SSSx      1776-07-04T00:00:00.123+00
+        yyyy-MM-dd'T'HH:mm:ss.SSSxx     1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSxxx    1776-07-04T00:00:00.123+00:00
+        yyyy-MM-dd'T'HH:mm:ss.SSSxxxx   1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSX      1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSXX     1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXX    1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXXX   1776-07-04T00:00:00.123Z
+        yyyy-MM-dd'T'HH:mm:ss.SSSZ      1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZ     1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZ    1776-07-04T00:00:00.123+0000
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ   1776-07-04T00:00:00.123GMT
+        
+        However, when assigned to the EST TZ, "x" and "Z" formats exclusive
+        of ZZZZ did not change representation. "X" went from "Z" to an
+        offset equal to "x".
+        yyyy-MM-dd'T'HH:mm:ss.SSSx     1776-07-03T19:00:00.123-05
+        yyyy-MM-dd'T'HH:mm:ss.SSSxx    1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSxxx   1776-07-03T19:00:00.123-05:00
+        yyyy-MM-dd'T'HH:mm:ss.SSSxxxx  1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSX     1776-07-03T19:00:00.123-05
+        yyyy-MM-dd'T'HH:mm:ss.SSSXX    1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXX   1776-07-03T19:00:00.123-05:00
+        yyyy-MM-dd'T'HH:mm:ss.SSSXXXX  1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZ     1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZ    1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZ   1776-07-03T19:00:00.123-0500
+        yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ  1776-07-03T19:00:00.123GMT-05:00
+     */
+    @ParameterizedTest
+    @MethodSource("dateTimeFormats")
+    public void format_dateTimeFormatter_UTC(String format) {
+        Date jul4 = get_date(true);
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(jul4.toInstant(), UTC_ZONE_ID);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        log.info(String.format("%30s %30s", format, dtf.format(zdt)));
+    }
+    @ParameterizedTest
+    @MethodSource("dateTimeFormats")
+    public void format_dateTimeFormatter_EST(String format) {
+        Date jul4 = get_date(true);
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(jul4.toInstant(), EST_ZONE_ID);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        log.info(String.format("%30s %30s", format, dtf.format(zdt)));
+    }
+
+    public static Stream<Arguments> dateTimeFormats() {
+        return Stream.of(
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSx"), //+00
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSxx"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSxxxx"),  //same as xx
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXX"),   //same as X
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),  //same as X
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXXXX"), //same as X
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZ"),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"), //same as Z
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ"), //same as Z
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ") //adds GMT
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("equalFormats")
+    public void format_equalFormats(String sdfFormat, String dtfFormat, TimeZone tz, ZoneId zid) {
+        Date jul4 = get_date(true);
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(jul4.toInstant(), zid);
+
+        SimpleDateFormat sdf = new SimpleDateFormat(sdfFormat);
+        if (tz!=null) { sdf.setTimeZone(tz); }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dtfFormat);
+        log.info(String.format("\nsdf=%30s %30s dtf=%30s %30s, tz=%s",
+                sdfFormat, sdf.format(jul4),
+                dtfFormat, dtf.format(zdt),
+                (tz==null?null : tz.getID()) ));
+        assertThat(sdf.format(jul4)).isEqualTo(dtf.format(zdt));
+    }
+
+    public static Stream<Arguments> equalFormats() {
+        return Stream.of(
+                        //1776-07-04T00:00:00.123Z
+                // DTF - "Pattern letter 'X' (upper case) will output 'Z' when the offset to be output would be zero"
+                // "Offset Z - Five letters outputs the hour, minute, with optional second if non-zero, with colon. It outputs 'Z' if the offset is zero."
+                // SDF - "ISO 8601 time zone"
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSX",    "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", UTC_TZ, UTC_ZONE_ID), //1776-07-04T00:00:00.123Z
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSX",    "yyyy-MM-dd'T'HH:mm:ss[.SSS]ZZZZZ", UTC_TZ, UTC_ZONE_ID),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXX",   "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", UTC_TZ, UTC_ZONE_ID),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",  "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", UTC_TZ, UTC_ZONE_ID),
+
+                        //1776-07-04T00:00:00.123+0000
+                // DTF - Offset Z: This formats the offset based on the number of pattern letters. One, two or three letters outputs the hour and minute, without a colon
+                // SDF - "RFC 822 time zone"
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZ",    "yyyy-MM-dd'T'HH:mm:ss[.SSS]Z", UTC_TZ, UTC_ZONE_ID),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZ",    "yyyy-MM-dd'T'HH:mm:ss[.SSS]xx", UTC_TZ, UTC_ZONE_ID),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZ",   "yyyy-MM-dd'T'HH:mm:ss.SSSZ", UTC_TZ, UTC_ZONE_ID),
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ",  "yyyy-MM-dd'T'HH:mm:ss.SSSZ", UTC_TZ, UTC_ZONE_ID),
+
+                        //1776-07-03T19:00:00.123-05:00
+                // DTF - "Three letters outputs the hour and minute, with a colon, such as '+01:30'"
+                // SDF - ""
+                        //1776-07-03T19:00:00.123-05
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSX",    "yyyy-MM-dd'T'HH:mm:ss.SSSx", EST_TZ, EST_ZONE_ID),
+                        //1776-07-03T19:00:00.123-0500
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXX",   "yyyy-MM-dd'T'HH:mm:ss.SSSxx", EST_TZ, EST_ZONE_ID),
+                        //1776-07-03T19:00:00.123-05:00
+                Arguments.of("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",  "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", EST_TZ, EST_ZONE_ID)
+        );
+    }
+
+    /**
+     * Although assigning the SDF to a specific TZ has a direct impact on what is formatted
+     * for output, it has no impact on parsing.
+     */
+    @ParameterizedTest
+    @MethodSource("parse_simpleDateFormat")
+    public void parse_simpleDateFormat_TZ(boolean parses, String format, String dateText, Date expectedResult) {
+        DateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(UTC_TZ);
+        try {
+            Date date = sdf.parse(dateText);
+            log.info("{} {} parsed {}", format, UTC_TZ.getID(), dateText);
+            assertThat(date).isEqualTo(expectedResult);
+            assertThat(parses).isTrue();
+        } catch (ParseException ex) {
+            log.info("{} {} failed parsing {}", format, UTC_TZ.getID(), dateText);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+    @ParameterizedTest
+    @MethodSource("parse_simpleDateFormat")
+    public void parse_simpleDateFormat(boolean parses, String format, String dateText, Date expectedResult) throws ParseException {
+        DateFormat sdf = new SimpleDateFormat(format);
+        try {
+            Date date = sdf.parse(dateText);
+            log.info("{} {} parsed {}", format, "null", dateText);
+            assertThat(date).isEqualTo(expectedResult);
+            assertThat(parses).isTrue();
+        } catch (ParseException ex) {
+            log.info("{} {} failed parsing {}", format, "null", dateText);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+    public static Stream<Arguments> parse_simpleDateFormat() {
+        Date jul4 = get_date(true);
+        Date jul4noMsecs = get_date(false);
+        return Stream.of(
+                // SDF - "ISO 8601 time zone"
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                // SDF - "ISO 8601 time zone"
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                // SDF - "ISO 8601 time zone"
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                // SDF - "RFC 822 time zone"
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123-0000", jul4),
+
+                // SDF - "RFC 822 time zone"
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", "1776-07-04T00:00:00.123-0000", jul4),
+
+                //look at msecs
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.000Z", jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX",  "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX",  "1776-07-04T00:00:00.000Z", jul4noMsecs)
+                );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("parse_dateTimeFormat")
+    public void parse_dateTimeFormat(boolean parses, String format, String dateText, Date expectedResult) {
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        try {
+            LocalDateTime ldt = LocalDateTime.parse(dateText, dtf);
+            Date date = Date.from(ldt.atZone(UTC_ZONE_ID).toInstant());
+            log.info("{} {} parsed {}", format, "null", dateText);
+            assertThat(date).isEqualTo(expectedResult);
+            assertThat(parses).isTrue();
+        } catch (DateTimeParseException ex) {
+            log.info("{} {} failed parsing {}", format, "null", dateText);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+    public static Stream<Arguments> parse_dateTimeFormat() {
+        Date jul4 = get_date(true);
+        Date jul4noMsecs = get_date(false);
+        return Stream.of(
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.[SSS]X", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSS[XXX]", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSS[XXX]", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSS[XXX]", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSS[XXX]", "1776-07-04T00:00:00.123-0000", jul4),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123-00", jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123-00:00", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "1776-07-04T00:00:00.123-0000", jul4),
+
+                //messing with msecs
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", "1776-07-04T00:00:00.000Z", jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", "1776-07-04T00:00:00.123Z", jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", "1776-07-04T00:00:00Z", jul4noMsecs)
+        );
+    }
+
+    /**
+     * This test demonstrates which SDF input formats can successfully parse which SDF
+     * output formats.
+     *
+     * The net result is that the ISO "X" formats are interoperable only when expressing
+     * UTC times. They are unable to parse each other's expression of TZ offset when listing
+     * the time in an alternate zone.
+     */
+    @ParameterizedTest
+    @MethodSource
+    public void interoperable_dates(String inputFormat, TimeZone tzIn, String outputFormat, TimeZone tzOut) throws ParseException {
+        Date jul4 = get_date(true);
+        SimpleDateFormat ofmt = new SimpleDateFormat(outputFormat);
+        ofmt.setTimeZone(tzOut);
+        SimpleDateFormat ifmt = new SimpleDateFormat(inputFormat);
+        ifmt.setTimeZone(tzIn);
+
+        String text = ofmt.format(jul4);
+        try {
+            Date date = ifmt.parse(text);
+            log.info("{} {} parsed {} {} {}", inputFormat, tzIn.getID(), text, outputFormat, tzOut.getID());
+            assertThat(date).isEqualTo(jul4);
+        } catch (Exception ex) {
+            log.info("{} {} failed to parse {} {} {}, {}", inputFormat, tzIn.getID(), text, outputFormat, tzOut.getID(), ex.toString());
+            fail(ex.toString());
+        }
+    }
+    public static Stream<Arguments> interoperable_dates() {
+        String[] formats = new String[]{
+                "yyyy-MM-dd'T'HH:mm:ss.SSSX", //1776-07-04T00:00:00.000Z - good!
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXX", //1776-07-04T00:00:00.000Z - good!
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", //1776-07-03T20:00:00.123-04:00 - if no tz
+                //"yyyy-MM-dd'T'HH:mm:ss.SSSZ" //1776-07-04T00:00:00.123+0000 - not interop
+                };
+        List<Arguments> params = new ArrayList<>();
+
+        for (String inputFormat: formats) {
+            for (String outputFormat: formats) {
+                for (TimeZone tzIn: new TimeZone[]{UTC_TZ, EST_TZ}) {
+                    for (TimeZone tzOut: new TimeZone[]{UTC_TZ/*, EST_TZ*/}) {
+                        params.add(Arguments.of(inputFormat, tzIn, outputFormat, tzOut));
+                    }
+                }
+            }
+        }
+        return params.stream();
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    public void dtf_interoperable_dates(String inputFormat, ZoneId tzIn, String outputFormat, ZoneId tzOut) throws ParseException {
+        Date jul4 = get_date(true);
+        DateTimeFormatter ofmt = DateTimeFormatter.ofPattern(outputFormat);
+        DateTimeFormatter ifmt = DateTimeFormatter.ofPattern(inputFormat);
+
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(jul4.toInstant(), tzOut);
+        String text = ofmt.format(zdt);
+        try {
+            ZonedDateTime zdt2 = ZonedDateTime.parse(text, ifmt);
+            Date date = Date.from(zdt2.toInstant());
+            log.info("{} {} parsed {} {} {}", inputFormat, tzIn.getId(), text, outputFormat, tzOut.getId());
+            assertThat(date).isEqualTo(jul4);
+        } catch (Exception ex) {
+            log.info("{} {} failed to parse {} {} {}, {}", inputFormat, tzIn.getId(), text, outputFormat, tzOut.getId(), ex.toString());
+            fail(ex.toString());
+        }
+    }
+    public static Stream<Arguments> dtf_interoperable_dates() {
+        String[] formats = new String[]{
+                "yyyy-MM-dd'T'HH:mm:ss.SSSX", //1776-07-04T00:00:00.000Z - good!
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", //1776-07-03T20:00:00.123-04:00 - if no tz
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" //1776-07-03T20:00:00.123-04:00 - if no tz
+                //"yyyy-MM-dd'T'HH:mm:ss.SSSZ" //1776-07-04T00:00:00.123+0000 - not interop
+        };
+        List<Arguments> params = new ArrayList<>();
+
+        for (String inputFormat: formats) {
+            for (String outputFormat: formats) {
+                for (ZoneId tzIn: new ZoneId[]{UTC_ZONE_ID, EST_ZONE_ID}) {
+                    for (ZoneId tzOut: new ZoneId[]{UTC_ZONE_ID/*, EST_ZONE_ID*/}) {
+                        params.add(Arguments.of(inputFormat, tzIn, outputFormat, tzOut));
+                    }
+                }
+            }
+        }
+        return params.stream();
+    }
+
+
+
+
+    /**
+     * This test tests what the default date format produced from JAXB is and which
+     * SDF formats can parse it
+     */
+    @ParameterizedTest
+    @MethodSource("parse_jaxb_date")
+    public void parse_jaxb_date(boolean parses, String format, boolean withMsecs) throws JAXBException, ParseException {
+        QuoteDTO dto = new QuoteDTO().withDate(get_date(withMsecs));
+        JaxbTest jaxb = new JaxbTest();
+        jaxb.init();
+        String text = jaxb.marshal(dto);
+        //we now have a date of the text format JAXB produces
+        String dateText = jaxb.get_date(text);
+
+        DateFormat sdf = new SimpleDateFormat(format);
+        try {
+            Date date = sdf.parse(dateText);
+            log.info("{} parsed {}, msecs={}", format, dateText, withMsecs);
+            assertThat(date).isEqualTo(dto.getDate());
+            assertThat(parses).isTrue();
+        } catch (ParseException ex) {
+            log.info("{} failed parsing {}, msecs={}", format, dateText, withMsecs);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+
+    public static Stream<Arguments> parse_jaxb_date() {
+        return Stream.of(
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", true),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", true),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX",false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", false),
+
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ssX",false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssXX", false),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ssXXX", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssZZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssZZZ", false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    public void jaxb_parse_sdf_date(boolean parses, String format, TimeZone tz) {
+        JaxbTest jaxbTest = new JaxbTest();
+        jaxbTest.init();
+        DateFormat sdf = new SimpleDateFormat(format);
+        if (tz!=null) { sdf.setTimeZone(tz); }
+
+        Date jul4 = get_date(true);
+        String dateText = sdf.format(jul4);
+        String quoteText = jaxbTest.get_marshalled_quote(dateText);
+
+        try {
+            QuoteDTO quote = jaxbTest.demarshal(QuoteDTO.class, quoteText);
+            if (quote.getDate()!=null) {
+                log.info("JAXB parsed {} {} {}", format, (tz==null?"null":tz.getID()), dateText);
+                assertThat(quote.getDate()).isEqualTo(jul4);
+                assertThat(parses).isTrue();
+            } else {
+                log.info("JAXB failed parsing {} {} {}", format, (tz==null?"null":tz.getID()), dateText);
+                assertThat(parses).isFalse();
+            }
+
+        } catch (JAXBException ex) {
+            log.info("JAXB failed parsing {} {} {}", format, (tz==null?"null":tz.getID()), dateText);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+    public static Stream<Arguments> jaxb_parse_sdf_date() {
+        return Stream.of(
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", UTC_TZ),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", UTC_TZ),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", UTC_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", UTC_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", UTC_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", UTC_TZ),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", null),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", null),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", null),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", null),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", null),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", null),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", EST_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", EST_TZ),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", EST_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", EST_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", EST_TZ),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", EST_TZ)
+        );
+    }
+
+
+
+    /**
+     * This test tests what the default date format produced from JAXB is and which
+     * SDF formats can parse it
+     */
+    @ParameterizedTest
+    @MethodSource
+    public void dtf_parse_jaxb_date(boolean parses, String format, boolean withMsecs) throws JAXBException, ParseException {
+        QuoteDTO dto = new QuoteDTO().withDate(get_date(withMsecs));
+        JaxbTest jaxb = new JaxbTest();
+        jaxb.init();
+        String text = jaxb.marshal(dto);
+        //we now have a date of the text format JAXB produces
+        String dateText = jaxb.get_date(text);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        try {
+            ZonedDateTime zdt = ZonedDateTime.parse(dateText, dtf);
+            Date date = Date.from(zdt.toInstant());
+            log.info("{} parsed {}, msecs={}", format, dateText, withMsecs);
+            assertThat(date).isEqualTo(dto.getDate());
+            assertThat(parses).isTrue();
+        } catch (DateTimeParseException ex) {
+            log.info("{} failed parsing {}, msecs={}", format, dateText, withMsecs);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+
+    public static Stream<Arguments> dtf_parse_jaxb_date() {
+        return Stream.of(
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", true),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", true),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", true),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX",false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", false),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", true),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XXX", true),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X",false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", false),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XXX", false),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssX",false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssXX", false),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ssXXX", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssZZ", false),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ssZZZ", false)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource
+    public void jaxb_parse_dtf_date(boolean parses, String format, ZoneId zid, Date dt) {
+        JaxbTest jaxbTest = new JaxbTest();
+        jaxbTest.init();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(dt.toInstant(), zid);
+        String dateText = dtf.format(zdt);
+        String quoteText = jaxbTest.get_marshalled_quote(dateText);
+
+        try {
+            QuoteDTO quote = jaxbTest.demarshal(QuoteDTO.class, quoteText);
+            if (quote.getDate()!=null) {
+                log.info("JAXB parsed {} {} {}", format, (zid==null?"null":zid.getId()), dateText);
+                assertThat(quote.getDate()).isEqualTo(dt);
+                assertThat(parses).isTrue();
+            } else {
+                log.info("JAXB failed parsing {} {} {}", format, (zid==null?"null":zid.getId()), dateText);
+                assertThat(parses).isFalse();
+            }
+
+        } catch (JAXBException ex) {
+            log.info("JAXB failed parsing {} {} {}", format, (zid==null?"null":zid.getId()), dateText);
+            assertThat(parses).isFalse();
+            log.info("{}", ex.getMessage());
+        }
+    }
+    public static Stream<Arguments> jaxb_parse_dtf_date() {
+        Date jul4 = get_date(true);
+        Date jul4noMsecs = get_date(false);
+        return Stream.of(
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", UTC_ZONE_ID, jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", UTC_ZONE_ID, jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", UTC_ZONE_ID, jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", UTC_ZONE_ID, jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", UTC_ZONE_ID, jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", UTC_ZONE_ID, jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", UTC_ZONE_ID, jul4),
+
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", ZoneId.systemDefault(), jul4),
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", ZoneId.systemDefault(), jul4),
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", ZoneId.systemDefault(), jul4),
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", ZoneId.systemDefault(), jul4),
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", ZoneId.systemDefault(), jul4),
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", ZoneId.systemDefault(), jul4),
+//                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", ZoneId.systemDefault(), jul4),
+
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSx", EST_ZONE_ID, jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSxx", EST_ZONE_ID, jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", EST_ZONE_ID, jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", EST_ZONE_ID, jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSXX", EST_ZONE_ID, jul4),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", EST_ZONE_ID, jul4),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", EST_ZONE_ID, jul4),
+
+                //messing with msecs
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", UTC_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss.SSSX", UTC_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", UTC_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", UTC_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XXX", UTC_ZONE_ID, jul4noMsecs),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X", EST_ZONE_ID, jul4noMsecs),
+                Arguments.of(FALSE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XX", EST_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]XXX", EST_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ssXXX", EST_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ssxxx", UTC_ZONE_ID, jul4noMsecs),
+                Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ssxxx", EST_ZONE_ID, jul4noMsecs)
+                //Arguments.of(TRUE, "yyyy-MM-dd'T'HH:mm:ss[.SSS]x", EST_ZONE_ID, jul4noMsecs) <= not valid
+            );
+    }
+
+}

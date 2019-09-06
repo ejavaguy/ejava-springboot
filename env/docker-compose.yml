@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:12.3-alpine
+#    ports:
+#      - "5432"
+    environment:
+      POSTGRES_PASSWORD: secret
+  mongodb:
+    image: mongo:4.4.0-bionic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+#    ports:
+#      - "27017"
+
+#docker-compose exec mongodb mongo -u admin -p secret

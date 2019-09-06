@@ -1,0 +1,13 @@
+<!-- logging-configs/no-console/logback-spring.xml
+    Example Logback configuration file to turn off CONSOLE Appender and retain all other
+    FILE Appender default behavior.
+-->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+
+    <root>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

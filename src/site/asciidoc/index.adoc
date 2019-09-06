@@ -1,0 +1,38 @@
+=== Enterprise Java (605.784.8VL) Fall 2021
+
+This is the course home page for the Enterprise Java Course (605.784), taught at John's Hopkins University, Engineering Programs for Professionals.  
+This version of the site contains the material for Fall 2021 and is based on Spring/Spring Boot Framework. 
+
+Course details can be found using the Course Description and Schedule/Notes links on the left hand side.
+The Schedule/Notes page provides links to individual lecture notes.
+The Full Lecture Notes links provide access to course notes for the entire semester.
+New material will be posted weekly as the semester advances.
+
+If you are looking for a version of the JavaEE content from previous semesters, refer to http://webdev.jhuep.com/%7ejcs/legacy-ejava-javaee[http://webdev.jhuep.com/~jcs/legacy-ejava-javaee]
+
+Legal Disclaimer: The information and opinions expressed within the materials located on this site are the personal contributions of Jim Stafford. 
+Content published here is not reviewed or approved by my employers (The Johns Hopkins University and GDIT/Praxis Engineering) before it is posted and does not necessarily represent the views and opinions of my employers.
+
+[id=whatsnew]
+==== What's New
+
+//* 2021-xx-xx: Posted App Config Materials
+//* 2021-xx-xx: Posted Application Build Materials
+* 2021-08-24: Posted initial class site
+
+[id="todo"]
+=== Class To Do
+
+* week01: Course Intro
+** register for https://blackboard.jhu.edu/webapps/discussionboard/do/conference?action=list_forums&course_id=_243975_1&nav=discussion_board_entry[newsgroup] and setup e-mail handling
+** post at least 1 test message to newsgroup
+** setup link:coursedocs/content/html_single/ejava-devenv-notes.html[development environment]
+** complete and turn in link:coursedocs/content/html_single/assignment0-race-build-notes.html[assignment 0]
+** post your weekly newsgroup contribution based on development environment setup
+
+
+[id="completed"]
+=== Things you should have completed!
+
+* week01: Course Intro
+** had a nice break!

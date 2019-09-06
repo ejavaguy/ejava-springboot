@@ -1,0 +1,18 @@
+version: '2'
+services:
+  mongo:
+    ports:
+      - "27017:27017"
+  postgres:
+    ports:
+      - "5432:5432"
+  activemq:
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+  api:
+    build:
+      context: ../dockercompose-votes-svc
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT}:8080"

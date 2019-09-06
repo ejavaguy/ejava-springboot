@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples.app</groupId>
+        <artifactId>app-config</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>appconfig-logging-example</artifactId>
+    <name>App::Config::Logging Example</name>
+    <description>
+        This project provides an example of how to implement logging
+    </description>
+
+    <dependencies>
+        <!-- used to declare logger -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- standard logback logging activated by default by starter-logging -->
+        <profile>
+            <id>logback</id>
+            <activation>
+                <property>
+                    <name>!logger</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- standard logback logging activated by default by starter-logging -->
+        <profile>
+            <id>janino</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.codehaus.janino</groupId>
+                    <artifactId>janino</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- turn off logback and use log4j as logger implementation -->
+        <profile>
+            <id>log4j2</id>
+            <activation>
+                <property>
+                    <name>logger</name>
+                    <value>log4j2</value>
+                </property>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-logging</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-log4j2</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>logger-config</id>
+            <activation>
+                <property>
+                    <name>logger.config</name>
+                </property>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <targetPath>${project.build.directory}/classes</targetPath>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources/logging-configs/${logger.config}</directory>
+                        <targetPath>${project.build.directory}/classes</targetPath>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources/logging-configs</directory>
+                        <excludes>
+                            <exclude>**</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-application</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

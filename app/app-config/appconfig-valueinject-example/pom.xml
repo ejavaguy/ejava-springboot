@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples.app</groupId>
+        <artifactId>app-config</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>appconfig-valueinject-example</artifactId>
+    <name>App::Config::Value Inject</name>
+    <description>
+      This project provides an example of a component being injected
+      with a value out of a properties file.
+    </description>
+
+    <dependencies>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>hello-service-stdout</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <executions>
+              <execution>
+                  <id>default-values</id>
+                  <phase>package</phase>
+                  <goals>
+                      <goal>run</goal>
+                  </goals>
+              </execution>
+              <execution>
+                  <id>command-line-values</id>
+                  <phase>package</phase>
+                  <goals>
+                      <goal>run</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>
+                        <argument>--app.audience=Command line option</argument>
+                        <argument>--val.str=aString</argument>
+                        <argument>--val.int=123</argument>
+                        <argument>--val.boolean=true</argument>
+                        <argument>--val.float=123.45</argument>
+                        <argument>--val.intList=1,2,3,3,3</argument>
+                        <argument>--val.intListDelimiter=1!2!3!3!3</argument>
+                        <argument>--val.map={0:'foo', 2:'bar, baz', 3:'buz'}</argument>
+                    </arguments>
+                  </configuration>
+              </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+</project>

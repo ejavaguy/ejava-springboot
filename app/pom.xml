@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples</groupId>
+        <artifactId>examples-root</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>info.ejava.examples.app</groupId>
+    <artifactId>app</artifactId>
+    <packaging>pom</packaging>
+    <name>Application Root</name>
+    <description>
+      This is the root project for topics relative to building
+      a core Spring Boot application.
+    </description>
+
+    <modules>
+        <module>app-build</module>
+        <!--
+        <module>app-config</module>
+        <module>app-testing</module>
+        -->
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>config</id>
+            <modules>
+                <module>app-build</module>
+                <module>app-config</module>
+                <module>app-testing</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>svc</id>
+            <modules>
+                <module>app-build</module>
+                <module>app-config</module>
+                <module>app-testing</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>all-modules</id>
+            <modules>
+                <module>app-build</module>
+                <module>app-config</module>
+                <module>app-testing</module>
+            </modules>
+        </profile>
+    </profiles>
+</project>

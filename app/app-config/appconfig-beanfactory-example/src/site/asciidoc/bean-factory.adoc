@@ -1,0 +1,190 @@
+= Dependency Injection
+
+In this module the student will 
+* Learn to decouple interface from implementation using dependency injection
+* Learn to instantiate the desired implementation for a component using an
+application @Bean factory method
+* Implement a Maven module dependency to make the component classes 
+for a service made available to the application module
+
+
+== Module Dependency
+
+First we need to make the Hello Service visible to our application
+by adding a dependency on the `hello-service` module from the application
+module.
+
+    <dependencies>
+        ...
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>hello-service</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+
+__Note:__ In this case, the module we are depending upon is in the 
+same `groupId` and shares the same `version`. For simplicity of 
+reference and versioning, I used the `${project}` variables to 
+reference it. That will not always be the case.
+
+__Note:__ If we had broken the component classes into separate
+modules (interface and implementation), we would have had multiple
+dependencues to declare above. 
+
+== Java Dependency
+
+Next we add a reference to the Hello interface and define how we 
+can get it injected. In this case we are using contructor injection
+where the instance is supplied to the class through a parameter to 
+the constructor. __Note__ that the component class now has a non-default 
+constructor to allow the `Hello` implementation to be injected and the
+Java attribute is defined as `final` to help assure that the value
+is assigned during the constructor.
+
+    package info.ejava.springboot.examples.app;
+    
+    import org.springframework.boot.CommandLineRunner;
+    import org.springframework.stereotype.Component;
+    
+    import Hello;
+    
+    @Component
+    public class AppCommand implements CommandLineRunner {
+        private final Hello greeter;
+        
+        public AppCommand(Hello greeter) {
+            this.greeter = greeter;
+        }
+        
+        public void run(String... args) throws Exception {        
+            greeter.sayHello("World");
+        }
+    }
+
+There are two primary ways to have dependencies injected into an instance:
+* constructor injection - injected values required prior to instance being created
+* value injection - injected values inserted after instance created
+    * field injection - value injected directly into attribute
+    * setter or property injection - setter() called with value
+
+There are more details to learn about injection and the lifecycle of a bean. However,
+know that we are using constructor injection at this point in time since
+the dependency is required.
+
+In the above example:
+* Spring will detect the AppCommand component and look for ways to 
+instantiate it
+* The only constructor requires a Hello instance
+* Spring will then look for a way to instantiate an instance of Hello
+
+== Bean Missing
+
+When we go to run the application, we get the following error
+
+    $ mvn clean package
+    ...
+    ***************************
+    APPLICATION FAILED TO START
+    ***************************
+    
+    Description:
+    
+    Parameter 0 of constructor in AppCommand required a bean of type 'Hello' that could not be found.
+    
+    
+    Action:
+    
+    Consider defining a bean of type 'Hello' in your configuration.
+
+
+The problem is that the container has no knowledge of any beans that can satisfy the 
+only available constructor. We can solve this in at least two (2) ways.
+* Add @Component to the StdOutHello class. This will trigger Spring to directly
+instantiate the class.  
+   * problem: It may be one of many implementations of Hello
+* Define what is needed using a @Bean factory method of a @Configuration class. 
+This will trigger Spring to call a method that is in charge of instantiating 
+an object of the type identified in the method return signature.   
+
+== @Configuration classes
+
+@Configuration classes are classes that Spring expects to have one or more @Bean factory 
+methods. If you remember back, our Spring Boot application class was annotated with 
+`@SpringBootApplication` 
+
+    @SpringBootApplication
+    public class SelfConfiguredApp {
+        public static final void main(String...args) {
+            SpringApplication.run(SelfConfiguredApp.class, args);
+        }
+    }
+
+* `@SpringBootApplication` is a wrapper around a few annotations including 
+`@SpringBootConfiguration`
+* `@SpringBootConfiguration` is an alternative annotation to using `@Configuration`
+with the caveat that there be only one `@SpringBootConfiguration` per application
+
+Therefore, we can use our Spring Boot application to host the configuration and 
+the @Bean factory.
+
+== @Bean Factory Method
+
+There is more to @Bean factory methods than we will cover here, but at its 
+simplest and most functional level -- this is a method the container will call 
+when the container determines it needs a bean of a certain type and locates
+a @Bean annotated method with a return type of the required type.
+
+Adding a @Bean factory method to our Spring Boot application class will
+result in the following in our Java class.
+
+    @SpringBootApplication
+    public class SelfConfiguredApp {
+        public static final void main(String...args) {
+            SpringApplication.run(SelfConfiguredApp.class, args);
+        }
+        
+        @Bean
+        public Hello hello() {
+            return new StdOutHello("Application @Bean says Hey");
+        }
+    }
+
+
+* method returns `Hello` type required by container
+* method annotated with `@Bean` implementation
+* method hosted within class with `@Configuration` annotation
+* `@SpringBootConfiguration` annotation included the capability defined for 
+`@Configuration`
+
+== @Bean Factory Used
+
+With the @Bean factory method in place, 
+* the container obtains an instance of a Hello bean
+* the container passes that bean to the AppCommand class' constructor
+to instantiate that `@Component` -- which with then also be a bean managed 
+by the Spring context.
+ 
+
+    $ java -jar target/springboot-appconfig-example-1.0-SNAPSHOT.jar
+    ...
+    Application @Bean says Hey World
+
+
+* The `@Bean` factory method chose
+    * The implementation of the `Hello` service (StdOutHello)
+    * The greeting to be used ("Application @Bean says Hey")
+* The AppCommand CommandLineRunner determined who to say hello to ("World")
+
+== Summary
+
+In this module we
+* decoupled part of our application into two Maven modules
+* decoupled the implementation details of a service from the caller of that service
+* injected the implementation of the service into a component
+* defined a factory method to determine what to inject
+
+In future modules we will look at more detailed aspects of Bean lifecycle
+and @Bean factory methods. Right now we are focused on following a path to 
+explore decoupling our the application even further.
+<!-- @PageBreak -->

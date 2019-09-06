@@ -1,0 +1,273 @@
+= Pure Java Main Application
+:srcdir: ../../main/java/info/ejava/examples/app/build/javamain
+
+This module provides an example of creating a simple Java class
+with a static main() method, packaging that in a Java Archive (JAR),
+and executing it two ways
+  * as a class in the classpath
+  * as the Main-Class of a JAR
+
+At the conclusion of this module, the student will be able to 
+* create a class with a static main() method
+* place that class within a Maven project tree for a module
+* build the module using a Maven pom.xml
+* execute the application using a classpath
+* configure the application as an executable JAR
+* execute an application packaged as an executable JAR
+
+
+
+== Simple Java Class with a Main
+
+Our simple Java application starts with a public class
+with a static main() method that optionally accepts 
+command-line arguments from the caller
+
+```java
+include::{srcdir}/SimpleMainApp.java[lines=1..]
+```
+
+* public class
+* implements a static main() method
+* optionally accepts arguments
+
+== Project Source Tree
+
+This class is placed within a module source tree in the 
+`src/main/java` directory below a set of additional directories
+that match the Java package name of the class (`info/ejava/springboot/examples/javamain`)
+
+    |-- pom.xml
+    `-- src
+        |-- main
+        |   |-- java
+        |   |   `-- info
+        |   |       `-- ejava
+        |   |           `-- springboot
+        |   |               `-- examples
+        |   |                   `-- javamain
+        |   |                       `-- SimpleMainApp.java
+        |   `-- resources
+        `-- test
+            |-- java
+            `-- resources
+
+
+* `src/main/resources` is commonly used for property files or other resource files 
+read in during the program execution
+* `src/test` is where test artifacts are placed. These will not be part of the 
+main output JAR artifact of the module 
+
+== Building the Java Archive (JAR) with Maven
+
+In setting up the build within Maven, I am going to limit the focus to just compiling our simple 
+Java class and packaging that into a standard Java JAR. 
+
+* Add the core document with the GAV information to the `pom.xml` file at the root of the module tree
+    * groupId
+    * artifactId
+    * version
+    * packaging (optional here -- default is `jar`)
+
+
+    <project xmlns="http://maven.apache.org/POM/4.0.0" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      
+      <groupId>info.ejava.springboot.examples.springboot.intro</groupId>
+      <artifactId>java-main-example</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <packaging>jar</packaging>
+      
+    </project>
+    
+* Define plugin versions so the module can be deterministically built in multiple environments
+    * Each version of Maven has a set of default plugins and plugin versions
+    * Each plugin version may or may not have a set of defaults (e.g., not Java 11) that are 
+    compatible with our module
+ 
+ 
+        <properties>
+            <java.target.version>11</java.target.version>
+            <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+            <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
+        </properties>
+        
+        <pluginManagement>
+         <plugins>
+            <plugin>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>${maven-compiler-plugin.version}</version>
+              <configuration>
+                <release>${java.target.version}</release>
+              </configuration>
+            </plugin>
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <version>${maven-jar-plugin.version}</version>
+            </plugin>
+           </plugins>
+        </pluginManagement>
+
+
+== Build the Module
+
+Maven modules are commonly built with the following commands
+* `clean` removes previously built artifacts
+* `package` creates primary artifact(s) (e.g., JAR) 
+    * processes main and test resources
+    * compiles main and test classes
+    * runs unit tests
+    * builds the archive
+
+
+    $ mvn clean package
+    [INFO] Scanning for projects...
+    [INFO]
+    [INFO] --< info.ejava.springboot.examples.springboot.intro:java-main-example >--
+    [INFO] Building Spring Boot::Intro::App::Java Main Example 1.0-SNAPSHOT
+    [INFO] --------------------------------[ jar ]---------------------------------
+    [INFO]
+    [INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ java-main-example ---
+    [INFO] Deleting .../java-main-example/target
+    [INFO]
+    [INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ java-main-example ---
+    [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+    [INFO] Copying 0 resource
+    [INFO]
+    [INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ java-main-example ---
+    [INFO] Changes detected - recompiling the module!
+    [WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+    [INFO] Compiling 1 source file to .../java-main-example/target/classes
+    [INFO]
+    [INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ java-main-example ---
+    [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+    [INFO] Copying 0 resource
+    [INFO]
+    [INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ java-main-example ---
+    [INFO] Changes detected - recompiling the module!
+    [WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+    [INFO]
+    [INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ java-main-example ---
+    [INFO]
+    [INFO] --- maven-jar-plugin:3.1.2:jar (default-jar) @ java-main-example ---
+    [INFO] Building jar: .../java-main-example/target/java-main-example-1.0-SNAPSHOT.jar
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time:  1.966 s
+
+
+== Project Build Tree
+
+The produced build tree contains the following key artifacts (and more)
+* `target/classes` for built artifacts from `src/main`
+* `target/test-classes` for built artifacts from `src/test`
+* primary artifact(s) (e.g., Java Archive (JAR))
+
+
+    |-- pom.xml
+    |-- src
+    `-- target
+        |-- classes
+        |   `-- info
+        |       `-- ejava
+        |           `-- springboot
+        |               `-- examples
+        |                   `-- javamain
+        |                       `-- SimpleMainApp.class
+        |-- java-main-example-1.0-SNAPSHOT.jar
+        |-- test-classes
+        `-- ...
+
+== Resulting Java Archive (JAR)
+
+Maven adds a few extra files to the META-INF directory that we can ignore. 
+The key files we want to focus on are:
+ * `SimpleMainApp.class` is the compiled version of our application
+ * [META-INF/MANIFEST.MF](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html) contains properties relevant to the archive
+
+
+    $ jar tf target/java-main-example-1.0-SNAPSHOT.jar | egrep -v "/$" | sort
+
+    META-INF/MANIFEST.MF
+    META-INF/maven/info.ejava.springboot.examples.springboot.intro/java-main-example/pom.properties
+    META-INF/maven/info.ejava.springboot.examples.springboot.intro/java-main-example/pom.xml
+    info/ejava/springboot/examples/javamain/SimpleMainApp.class
+
+
+== Execute the Application
+
+The application is executed by 
+* invoking the `java` command
+* adding the JAR file (and any other dependencies) to the classpath
+* specifying the fully qualified class name of the class that contains our main() method
+
+
+      $ java -cp target/java-main-example-1.0-SNAPSHOT.jar info.ejava.springboot.examples.javamain.SimpleMainApp
+
+    Output: 
+    Hello []
+    
+    $ java -cp target/java-main-example-1.0-SNAPSHOT.jar info.ejava.springboot.examples.javamain.SimpleMainApp arg1 arg2 "arg3 and 4"
+    Output:
+    Hello [arg1, arg2, arg3 and 4]
+
+* first example passed no arguments
+* second example passed three (3) arguments
+    * third argument used quotes around the entire string to include spaces
+
+
+== Configure Application as an Executable JAR
+
+To execute a specific Java class within a classpath is conceptually simple. However,
+there is a lot more to know than we need to when there may be only a single entry point.
+In the following sections we will assign a default Main-Class by using the 
+[MANIFEST.MF properties](https://docs.oracle.com/javase/tutorial/deployment/jar/appman.html)
+
+* Add Main-Class property to MANIFEST.MF
+
+
+    $ unzip -qc target/java-main-example-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF
+
+    Manifest-Version: 1.0
+    Created-By: Maven Archiver 3.4.0
+    Build-Jdk-Spec: 11
+    Main-Class: info.ejava.springboot.examples.javamain.SimpleMainApp
+
+
+One way to surgically add that property is thru the [maven-jar-plugin](https://maven.apache.org/shared/maven-archiver/examples/classpath.html#Make)
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven-jar-plugin.version}</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>info.ejava.springboot.examples.javamain.SimpleMainApp</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+
+* Execute the JAR versus just adding to classpath
+
+
+    $ java -jar target/java-main-example-1.0-SNAPSHOT.jar
+    Output: 
+    Hello []
+    
+    $ java -jar target/java-main-example-1.0-SNAPSHOT.jar one two "three and four"
+    Output:
+    Hello [one, two, three and four]
+
+== Summary 
+
+* The JVM will execute the static `main()` method of a class specified to the java command
+* The class must be in the JVM classpath
+* Maven can be used to build a JAR with classes
+* A JAR can be the subject of a java execution
+* The Java `META-INF/MANIFEST.MF` `Main-Class` property within the target JAR can express the class with the `main()` method to execute
+* The maven-jar-plugin can be used to add properties to the `META-INF/MANIFEST.MF` file

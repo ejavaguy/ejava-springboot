@@ -1,0 +1,18 @@
+<configuration debug="true">
+
+    <contextName>server${serverNum:-0}</contextName>
+
+    <springProfile name="dev">
+        <property name="PROP1" value="PROP1-dev"/>
+    </springProfile>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>LOGPATH=${LOG_PATH:-default-logs} PROP1=${PROP1:-default-val} %contextName %5p %C{0}:%L - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="${verbosity}:-info">
+        <appender-ref ref="console"/>
+    </root>
+</configuration>

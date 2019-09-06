@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples.build</groupId>
+        <artifactId>ejava-build-parent</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+		<!--
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>2.4.2</version>
+    -->
+        <relativePath/>
+    </parent>
+
+    <groupId>info.ejava-student.assignment1.race</groupId>
+    <artifactId>assignment1-race-javaapp</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>EJava Student::Assignment1::Build::Java App</name>
+
+    <properties>
+        <!-- supply a Main class -->
+      <main.class>a-main-class</main.class>
+        <!-- disable skip - set to false-->
+      <maven.antrun.skip>true</maven.antrun.skip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>execute-class</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <java fork="true" classname="${main.class}">
+                                    <classpath>
+                                        <pathelement path="${project.build.directory}/${project.build.finalName}.jar"/>
+                                    </classpath>
+                                </java>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>execute-jar</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <java fork="true"
+                                      jar="${project.build.directory}/${project.build.finalName}.jar">
+                                </java>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

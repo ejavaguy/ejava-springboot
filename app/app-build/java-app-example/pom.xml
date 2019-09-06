@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples.app</groupId>
+        <artifactId>app-build</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>java-app-example</artifactId>
+    <packaging>jar</packaging>
+    <name>App::Build::Java App Example</name>
+    <description>
+      This project provides an example of a simple Java main application in a JAR.
+    </description>
+
+    <properties>
+        <jarfile>${project.build.directory}</jarfile>
+    </properties>
+
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>info.ejava.examples.app.build.javamain.SimpleMainApp</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <executions>
+              <execution>
+                  <id>execute-jar</id>
+                  <phase>integration-test</phase>
+                  <goals>
+                      <goal>run</goal>
+                  </goals>
+                  <configuration>
+                      <tasks>
+                          <java fork="true" classname="info.ejava.examples.app.build.javamain.SimpleMainApp">
+                              <classpath>
+                                  <pathelement path="${project.build.directory}/${project.build.finalName}.jar"/>
+                              </classpath>
+                              <arg value="Ant-supplied java -cp"/>
+                              <arg value="Command Line"/>
+                              <arg value="args"/>
+                          </java>
+                          <java fork="true"
+                                jar="${project.build.directory}/${project.build.finalName}.jar">
+                              <arg value="Ant-supplied java -jar"/>
+                              <arg value="Command Line"/>
+                              <arg value="args"/>
+                          </java>
+                      </tasks>
+                  </configuration>
+              </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+</project>

@@ -5,3 +5,12 @@ target
 .settings
 *.swp
 hs_err_pid*.log
+
+.idea
+*.iml
+.factorypath
+.springBeans
+.DS_Store
+
+.flattened-pom.xml
+.env

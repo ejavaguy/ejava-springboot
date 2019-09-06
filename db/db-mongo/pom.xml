@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples.db</groupId>
+        <artifactId>db</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>info.ejava.examples.db.mongo</groupId>
+    <artifactId>db-mongo</artifactId>
+    <packaging>pom</packaging>
+    <name>Data Tier::Mongo Root</name>
+    <description>
+      This is the root project for examples relative to interacting
+      with a MongoDB using MongoTemplate and Spring Data MongoDB Repository.
+    </description>
+
+    <modules>
+        <module>mongo-book-example</module>
+    </modules>
+</project>

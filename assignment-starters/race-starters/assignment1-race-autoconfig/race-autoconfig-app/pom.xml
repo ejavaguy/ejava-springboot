@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava-student.assignment1.race</groupId>
+        <artifactId>assignment1-race-autoconfig</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>race-autoconfig-app</artifactId>
+    <name>EJava Student::Assignment1::Config::Auto Config::App</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="failure expected in the following if no profiles active"/>
+                                <java fork="true"
+                                      jar="${project.build.directory}/${project.build.finalName}.jar">
+                                </java>
+                                <echo message="swim will be chosen if in the classpath"/>
+                                <java fork="true"
+                                      jar="${project.build.directory}/${project.build.finalName}.jar">
+                                    <arg value="&#45;&#45;races.registration.type=swim"/>
+                                </java>
+                                <echo message="run will be chosen if in the classpath"/>
+                                <java fork="true"
+                                      jar="${project.build.directory}/${project.build.finalName}.jar">
+                                    <arg value="&#45;&#45;races.registration.type=run"/>
+                                </java>
+                                <echo message="failure expected in the following"/>
+                                <java fork="true"
+                                      jar="${project.build.directory}/${project.build.finalName}.jar">
+                                    <arg value="&#45;&#45;races.registration.active=false"/>
+                                </java>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>swim</id>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>race-autoconfig-swim</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>run</id>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>race-autoconfig-run</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+</project>

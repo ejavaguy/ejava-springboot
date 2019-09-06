@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>info.ejava.examples.app</groupId>
+        <artifactId>app</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>app-config</artifactId>
+    <packaging>pom</packaging>
+    <name>App::Config</name>
+    <description>
+      This is the root project for topics relative to configuring
+      a Spring Boot application.
+    </description>
+
+    <modules>
+        <module>hello-service-api</module>
+        <module>hello-service-stdout</module>
+        <module>hello-starter</module>
+        <module>appconfig-beanfactory-example</module>
+        <module>appconfig-xmlconfig-example</module>
+        <module>appconfig-valueinject-example</module>
+        <module>appconfig-propertysource-example</module>
+        <module>appconfig-propertysource-annotation-example</module>
+        <module>appconfig-propertysource-profile-example</module>
+        <module>appconfig-configproperties-example</module>
+        <module>appconfig-autoconfig-example</module>
+        <module>appconfig-logging-example</module>
+    </modules>
+</project>

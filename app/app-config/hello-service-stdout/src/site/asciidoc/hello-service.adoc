@@ -1,0 +1,116 @@
+= Hello Service
+:icons: font
+
+In this module we will
+
+* create an interface for a simple `Hello` service
+* create a sample implementation for the service interface
+ 
+These artifacts will soon be used in a set of examples
+showing how an application can be configured with different components
+and how to configure the components. At this point you can simply
+think of a component as a class that will be instantiated and managed
+by the container when needed. This component will perform a simple
+capabilty -- say hello -- which we will use to demonstrate various ways
+to configure this behavior.
+
+== Hello Service Interface
+
+The interface is quite simple, just pass in the String name value for what you 
+want the service to say hello to. 
+
+[source,java]
+----
+package info.ejava.examples.app.hello;
+
+public interface Hello {
+    void sayHello(String name);
+}
+----
+
+The service instance will be responsible for 
+
+* the greeting
+* the implementation -- how we say hello
+
+== Hello Service Implementation
+
+Our sample implementation is just as simple. It maintains the greeting
+in a final instance attribute and uses `stdout` to print the message.
+
+[source,java]
+----
+package info.ejava.examples.app.hello; //<1>
+
+public class StdOutHello implements Hello {
+    private final String greeting; //<2>
+
+    public StdOutHello(String greeting) { //<3>
+        this.greeting = greeting;
+    }
+
+    @Override //<4>
+    public void sayHello(String name) {
+        System.out.println(greeting + " " + name);
+    }
+}
+----
+<1> The implementation can be in any Java package. We happen to use the
+sample package for simplicity
+<2> `greeting` will hold our phrase for saying hello and is made final
+to highlight it is required and will not change during the lifetime
+of the class instance
+<3> A single constructor is provided to define a means to initialize the
+instance. Remember -- the `greeting` is final and must be set during
+class instantiation and not later during a setter.
+<4> The `sayHello()` method provides an implementation of the
+defined method defined in the interface
+
+NOTE: `final` requires the value set when the instance is created and never change.
+
+
+TIP: Constructor injection makes required attributes marked final
+easier to set during testing
+
+== Hello Service Packaging
+
+The service interface and one or more implementations could have been 
+seperated into separate modules, but were left in a single module here
+for simplicity.
+
+[source,text]
+----
+|-- pom.xml
+`-- src
+    `-- main
+        `-- java
+            `-- info
+                `-- ejava
+                    `-- examples
+                        `-- app
+                            `-- hello
+                                |-- Hello.java
+                                `-- StdOutHello.java
+----
+
+We have placed this service interface and component implementation
+in a Maven module called `info.ejava.examples.app:hello-service`
+
+[source,xml]
+----
+#pom.xml
+<groupId>info.ejava.examples.app</groupId>
+<artifactId>hello-service</artifactId>
+<packaging>jar</packaging>
+----
+
+== Summary
+
+In this section we 
+
+* created an Java interface for a simple `Hello` service
+* created a sample `Hello` service implementation that will be used
+as an example component in follow-on configuration examples
+* packaged the classes in a separate module (JAR)
+
+This service will be used in later configuration examples.

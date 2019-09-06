@@ -1,0 +1,24 @@
+race:
+  swim:
+    events:
+      - name: OCNJ Masters Swim
+        address:
+          city: Ocean City
+          state: NJ
+        distance: 1 mi
+  run:
+    events:
+      - name: Baltimore 5k
+        address:
+          city: Baltimore
+          state: MD
+        distance: 5K
+      - name: Maryland CE Marathon
+        address:
+          city: Severna Park
+          state: MD
+        distance: 26.2 mi
+      - name: Boston Marathon
+        distance: 26.2 mi
+        address:
+          state: MA

@@ -1,0 +1,128 @@
+@Library('ejava-jenkinsfile') _
+
+pipeline {
+    agent { 
+      docker { 
+        image 'ejava-springboot-maven:3.8.2' 
+        args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 982'
+      } 
+    }
+    
+    parameters {
+        string(name:'END_GOAL', defaultValue:'deploy', description:'')
+        string(name:'MASTER_PROFILES', defaultValue:'-Pjacoco', description:'modules to include as semester progresses for master branch')
+        string(name:'TEST_PROFILES', defaultValue:'-Pall-modules -Dall-modules --fail-fast', description:'additional profiles for non-master branch')
+        //string(name:'TEST_PROFILES', defaultValue:'--fail-fast', description:'additional profiles for non-master branch')
+        string(name:'SITE_HOST', defaultValue:'sturgeon.wse.jhu.edu', description:'')
+        string(name:'SITE_CERT', defaultValue:'ejava_publish_cert', description:'')
+        string(name:'SITE_DEPLOY', defaultValue:'site:deploy -Dremote-deploy', description:'site deploy goal and options')
+    }
+	
+    options {
+        timestamps()
+    }
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+    
+    environment {
+        DOCS_REPO = 'https://github.com/ejavaguy/ejava-springboot-docs.git'
+        MAVEN_OPTS='-Xmx1024m \
+                    -Dmaven.wagon.http.ssl.allowall=true \
+                    -Dmaven.wagon.http.ssl.insecure=true \
+                    -Djdk.net.URLClassPath.disableClassPathURLCheck=true \
+                    -Duser.home=/root'
+        IMPL_PROFILES='-Pholder'
+	  }
+	
+    stages {
+        stage ('Setup Environment') {
+            steps {
+                script {
+                    env.SITE_DEPLOY=params.SITE_DEPLOY
+                    ifBranch('master', {
+                       env.MAVEN_SETTINGS_ID='settings_xml_prod'
+                       env.MODULE_PROFILES=env.IMPL_PROFILES + ' ' + params.MASTER_PROFILES
+                    }, {
+                       env.MAVEN_SETTINGS_ID='settings_xml_stage'
+                       env.MODULE_PROFILES=env.IMPL_PROFILES + ' ' + params.MASTER_PROFILES + ' ' + params.TEST_PROFILES
+                    })
+                    sh 'printenv'
+                    echo "settings=${MAVEN_SETTINGS_ID}, profiles=${MODULE_PROFILES}"
+                    sh 'df -h'
+                }
+            }
+        }
+
+    stage ("Check out") {
+        steps {
+            checkout scm
+            }
+        }
+
+        stage ('Install Parent Poms') {
+            steps {
+               configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_ID, targetLocation: 'settings.xml', variable: 'MAVEN_SETTINGS_PATH')]) {
+                   sh 'mvn install -f build -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES'
+               }
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_ID, targetLocation: 'settings.xml', variable: 'MAVEN_SETTINGS_PATH')]) {
+                    sh 'mvn clean install -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES'
+                }
+            }
+            post {
+                always {
+                    junit allowEmptyResults:true, testResults:'**/target/*-reports/TEST-*.xml'
+                }
+            }
+        }
+        
+        stage ('Generate Site') {
+            when {
+                expression { params.END_GOAL=='deploy' }
+            }
+            steps {
+                 configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_ID, targetLocation: 'settings.xml', variable: 'MAVEN_SETTINGS_PATH')]) {
+                     sh 'mvn site site:stage -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES -Preports'
+                 }
+            }
+            post {
+                failure { sh 'df -h' }
+            }
+        }
+
+        stage ('Deploy Modules') {
+            when {
+                expression { params.END_GOAL=='deploy' }
+            }
+            steps {
+                configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_ID, targetLocation: 'settings.xml', variable: 'MAVEN_SETTINGS_PATH')]) {
+                    sh 'mvn deploy -f build -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES'
+                    sh 'mvn deploy -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES -PskipTests -PskipITs'
+                }
+            }
+        }
+        stage ('Deploy Site') {
+            when {
+                expression { params.END_GOAL=='deploy' }
+            }
+            steps {
+                sshSetup(params.SITE_HOST)
+                sshMaven(params.SITE_CERT) {
+                    sh 'mvn site:site $SITE_DEPLOY -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES -PskipTests -PskipITs'
+                }
+            }
+        }
+
+        stage ('Code Coverage') {
+            steps {
+                jacoco()
+            }
+        }
+
+    }
+}

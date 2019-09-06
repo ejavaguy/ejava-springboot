@@ -1,0 +1,59 @@
+<project name="${this.name}">
+    <publishDate position="navigation-bottom" format="MMM-dd-yyyy"/>
+    <bannerLeft>
+        <name>Enterprise Java (605.784.8VL)</name>
+        <src>coursedocs/content/images/jhu784-8vl-white.png</src>
+        <href>${this.url}/index.html</href>
+    </bannerLeft>
+    <bannerRight>
+        <name>Fall 2021</name>
+        <src>coursedocs/content/images/semester-white.png</src>
+        <href>http://ep.jhu.edu/</href>
+    </bannerRight>
+
+  <body>
+    <links>
+        <item name="Newsgroup" href="https://groups.yahoo.com/neo/groups/ejava_class/info" />
+        <item name="JavaSE API" href="https://docs.oracle.com/en/java/javase/11/docs/api/"/>
+        <item name="JavaEE API" href="https://javaee.github.io/javaee-spec/javadocs/"/>
+        <item name="Spring API" href="https://docs.spring.io/spring-boot/docs/current/api/"/>
+        <item name="Spring Boot API" href="https://docs.spring.io/spring/docs/current/javadoc-api/"/>
+        <item name="Spring Docs" href="https://spring.io/projects/spring-boot"/>
+        <item name="Maven" href="http://maven.apache.org/maven2/"/>
+    </links>
+
+    <breadcrumbs>
+        <item name="Course Root" href="./index.html"/>
+    </breadcrumbs>
+
+    <menu name="Quick Links" inherit="top">
+    <!--
+        <item name="Docs" href="coursedocs/index.html"/>
+        -->
+        <item name="Course Description" href="coursedocs/content/html_single/jhu784-syllabus.html#jhu784-course-description"/>
+        <item name="Schedule/Notes" href="coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule"/>
+        <item name="Full Lectures Notes (HTML)" href="coursedocs/content/html_single/jhu784-notes.html"/>
+        <item name="Full Lectures Notes (PDF)" href="coursedocs/content/pdf/jhu784-notes.pdf"/>
+        <!--
+        <item name="Exercises" href="coursedocs/content/html_single/jhu784-lab-book.html#jhu784-lab-labs"/>
+        -->
+    </menu>
+
+<!--
+    <menu ref="modules" inherit="bottom"/>
+    -->
+    <menu ref="reports" inherit="bottom"/>
+
+<!--
+    <footer>
+        <footer>No rights reserved. Enjoy:)</footer>
+    </footer>
+    -->
+  </body>
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.7</version>
+    </skin>
+</project>

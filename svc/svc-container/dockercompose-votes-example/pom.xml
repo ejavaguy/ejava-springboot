@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>info.ejava.examples.svc.container</groupId>
+        <artifactId>svc-container</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>dockercompose-votes-example</artifactId>
+    <name>Services::Container::Docker Compose Example</name>
+    <packaging>pom</packaging>
+    <description>
+        This project provides a demonstration of implementing and
+        testing multiple servics/networks using Docker containers,
+        Docker Compose, and Testcontainers.
+    </description>
+
+
+    <modules>
+      <module>dockercompose-votes-client</module>
+      <module>dockercompose-votes-svc</module>
+      <module>dockercompose-votes-it</module>
+      <module>testcontainers-votes-ntest</module>
+      <module>testcontainers-votes-spock-ntest</module>
+    </modules>
+
+</project>

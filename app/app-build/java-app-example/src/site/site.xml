@@ -1,0 +1,7 @@
+<project name="${this.name}">
+  <body>
+    <menu name="Asciidoctor Example">
+        <item href="README.html" name="Hello" />
+    </menu>    
+  </body>
+</project>

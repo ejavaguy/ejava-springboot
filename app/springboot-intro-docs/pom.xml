@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.springboot.examples.springboot.intro</groupId>
+        <artifactId>springboot-intro</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>springboot-intro-docs</artifactId>
+    <packaging>pom</packaging>
+    <name>Spring Boot::Intro::Docs</name>
+    <description>
+      This module hosts the aggregate set of introduction docs
+    </description>
+
+    <properties>
+        <markdown.inputPaths>
+${project.parent.basedir}/**/springboot-intro-outline.md,
+
+${project.parent.basedir}/**/java-main.md,
+${project.parent.basedir}/**/springboot-app.md,
+
+${project.parent.basedir}/**/springboot-inject.md,
+
+${project.parent.basedir}/**/starters.md,
+${project.parent.basedir}/**/springboot-starterconfig-example.md,
+
+${project.parent.basedir}/**/starter-properties.md,
+${project.parent.basedir}/**/springboot-starterproperties-example.md
+        </markdown.inputPaths>
+    </properties>
+</project>

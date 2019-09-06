@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.springboot.examples.springboot.intro</groupId>
+        <artifactId>springboot-config-intro</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>springboot-config-intro-docs</artifactId>
+    <name>Spring Boot::Intro::Config::Docs</name>
+    <description>
+        This project provides the aggregate documentation for Spring Boot 
+        configuration topics.
+    </description>
+
+    <properties>
+        <markdown.inputPaths>
+            **/springboot-config-intro.md,
+            **/hello-service.md,
+            **/bean-factory.md,
+            **/value-inject.md,
+            **/property-source.md,
+            **/starters.md,
+            **/starter-properties.md,
+            **/springboot-inject.md,
+            **/springboot-starterconfig-example.md,
+            **/springboot-starterproperties-example.md
+        </markdown.inputPaths>
+    </properties>
+</project>

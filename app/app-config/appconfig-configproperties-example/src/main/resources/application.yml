@@ -1,0 +1,28 @@
+app:
+  config:
+    route:
+      name: Superbowl
+      stops:
+        - street: 1101 Russell St
+          city: Baltimore
+          state: MD
+          zip: 21230
+        - street: 347 Don Shula Drive
+          city: Miami
+          state: FLA
+          zip: 33056
+
+
+owner:
+  name: Steve Bushati
+  address:
+    city: Millersville
+    state: MD
+    zip: 21108
+
+manager:
+  name: Eric Decosta
+  address:
+    city: Owings Mills
+    state: MD
+    zip: 21117

@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:4.4.0-bionic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+#    ports:
+#      - "27017"
+  postgres:
+    image: postgres:12.3-alpine
+#    ports:
+#      - "5432"
+    environment:
+      POSTGRES_PASSWORD: secret
+  activemq:
+    image: rmohr/activemq:5.15.9
+    restart: always
+#    ports:
+#      - "61616"
+#      - "8161"
+  api:
+    build:
+      context: ../dockercompose-votes-svc
+      dockerfile: Dockerfile
+    image: dockercompose-votes-api:latest
+    ports:
+      - "${API_PORT}:8080"
+    depends_on:
+      - mongo
+      - postgres
+      - activemq
+    environment:
+      - spring.profiles.active=integration
+      - MONGODB_URI=mongodb://admin:secret@mongo:27017/votes_db?authSource=admin
+      - DATABASE_URL=postgres://postgres:secret@postgres:5432/postgres

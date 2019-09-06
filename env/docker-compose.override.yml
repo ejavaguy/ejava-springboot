@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+  mongodb:
+    ports:
+      - "27017:27017"
+#    command: --logpath /var/log/mongodb/mongodb.log
+
+#db.adminCommand({ setParameter:1, logComponentVerbosity:{ write:{verbosity:2}, query:{verbosity:2} }})
+#tail -f /var/log/mongodb/mongodb.log | egrep '(WRITE|QUERY).*Book'

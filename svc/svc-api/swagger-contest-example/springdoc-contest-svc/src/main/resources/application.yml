@@ -1,0 +1,21 @@
+
+
+api:
+  swagger:
+    title: Springdoc Swagger Contest Example
+    description: This application provides an example of how to provide extra swagger and
+      springfox configuration in order to better document the API.
+    version: v1
+    contact:
+      name: Jim Stafford
+      url: https://webdev.jhuep.com/~jcs/ejava-springboot
+
+  controllers:
+    ContestControllers:
+      getContests:
+        description: This endpoint will return a collection of contests based
+          on the paging values assigned
+        param:
+          offset: optional, server will set to "no offset" if not supplied or 0
+          limit: optional, server will set to "no limit" if not supplied or 0
+

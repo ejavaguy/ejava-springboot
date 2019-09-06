@@ -1,162 +1,226 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>info.ejava.examples.build</groupId>
+        <artifactId>ejava-build-parent</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+        <relativePath>build/ejava-build-parent/pom.xml</relativePath>
+    </parent>
 
     <groupId>info.ejava.examples</groupId>
     <artifactId>examples-root</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Examples::Root</name>
+    <name>EJava Course</name>
     <description>
         This project provides the root for all example and exercise source code modules.
     </description>
 
+    <!--
+    Area -
+    Module - covered topic
+    Chapter - aspect of a topic
+    Section - contents of a chapter
+    -->
+
     <modules>
-        <module>firsttry</module>
-        <module>springboot-intro</module>
+        <module>coursedocs</module>
+        <module>intro</module>
+        <module>common</module>
+        <module>app</module>
+        <!--
+        <module>svc</module>
+        <module>db</module>
+        <module>async</module>
+        -->
     </modules>
 
+    <url>https://jcs.ep.jhu.edu/ejava-springboot</url>
+
     <properties>
-        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
+        <asciidoctor.maven.plugin.version>2.0.0-RC.1</asciidoctor.maven.plugin.version>
     </properties>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${maven-site-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+								<groupId>org.codehaus.mojo</groupId>
+								<artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
+ 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <generateReports>true</generateReports>
+                    <generateSitemap>true</generateSitemap>
+                    <relativizeDecorationLinks>false</relativizeDecorationLinks>
+                    <locales>en</locales>
+                    <inputEncoding>UTF-8</inputEncoding>
+                    <outputEncoding>UTF-8</outputEncoding>
+                    <!-- site-wide AsciiDoc attributes https://asciidoctor.org/docs/asciidoctor-maven-plugin/#maven-site-integration -->
+                    <asciidoc>
+                        <attributes>
+                            <icons>font</icons>
+                            <source-highlighter>coderay</source-highlighter>
+                            <coderay-css>style</coderay-css>
+                            <toclevels>2</toclevels>
+
+                            <organization>JHU Whiting School of Engineering | Engineering for Professionals</organization>
+                        </attributes>
+                    </asciidoc>
+                    <skip>false</skip>
+                    <skipDeploy>false</skipDeploy>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>${asciidoctor.maven.plugin.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+            </plugin>
+
+            <plugin> 
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <configuration>
+                    <detectLinks>false</detectLinks>
+                    <detectOfflineLinks>true</detectOfflineLinks>
+                    <show>private</show>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <failOnError>false</failOnError>
+
+                    <source>8</source>
+                    <detectJavaApiLink>false</detectJavaApiLink>
+
+                    <links>
+                        <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
+                        <link>https://javaee.github.io/javaee-spec/javadocs/</link>
+                        <link>https://jakarta.ee/specifications/platform/8/apidocs/</link>
+                        <link>https://docs.spring.io/spring-boot/docs/${springboot.version}/api/</link>
+                    </links>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <id>javadoc-report</id>
+                        <reports>
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>javadoc-aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
         <profile>
-            <id>markdown</id>
-            <activation>
-                <file>
-                    <exists>src/markdown</exists>
-                </file>
-            </activation>
+            <id>svc</id>
+            <modules>
+                <module>svc</module>
+            </modules>
+        </profile>
 
+        <profile>
+            <id>db</id>
+            <modules>
+                <module>svc</module>
+                <module>db</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>async</id>
+            <modules>
+                <module>svc</module>
+                <module>db</module>
+                <module>async</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>all-modules</id>
             <properties>
-                <markdown.inputPaths>${project.artifactId}/src/markdown/.*.md</markdown.inputPaths>
+                <all-modules>true</all-modules>
             </properties>
+            <modules>
+                <module>coursedocs</module>
+                <module>intro</module>
+                <module>common</module>
+                <module>app</module>
+                <module>svc</module>
+                <module>db</module>
+                <module>async</module>
+            </modules>
+        </profile>
 
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>spring-plugins</id>
-                    <name>Spring Plugins Repository</name>
-                    <url>https://repo.spring.io/plugins-release/</url>
-                    <releases>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
 
+        <profile>
+            <id>local-deploy</id>
+            <activation>
+                <property>
+                    <name>!remote-deploy</name>
+                </property>
+            </activation>
+            <distributionManagement>
+                <site>
+                    <id>local</id>
+                    <name>Local Site</name>
+                    <url>file:///tmp/ejava-springboot</url>
+                </site>
+            </distributionManagement>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>se.natusoft.tools.doc.markdowndoc</groupId>
-                            <artifactId>markdowndoc-maven-plugin</artifactId>
-                            <version>2.1.2</version>
-                            <executions>
-                                <execution>
-                                    <id>generate-html</id>
-                                    <goals>
-                                        <goal>doc</goal>
-                                    </goals>
-                                    <phase>site</phase>
-                                    <configuration>
-                        
-                                        <generatorOptions>
-                                            <generator>html</generator>
-                                            <inputPaths>${markdown.inputPaths}</inputPaths>
-                                        </generatorOptions>
-                                        
-                                        <htmlGeneratorOptions>
-                                            <resultFile>${project.build.directory}/site/README.html</resultFile>
-                                        </htmlGeneratorOptions>
-                                    </configuration>
-                                </execution>
-
-                                <execution>
-                                    <id>generate-md</id>
-                                    <goals>
-                                        <goal>doc</goal>
-                                    </goals>
-                                    <phase>site</phase>
-                                    <configuration>
-                        
-                                        <generatorOptions>
-                                            <generator>md</generator>
-                                            <inputPaths>${markdown.inputPaths}</inputPaths>
-                                        </generatorOptions>
-                                        
-                                        <mdGeneratorOptions>
-                                            <resultFile>${project.build.directory}/README.md</resultFile>
-                                        </mdGeneratorOptions>
-                                    </configuration>
-                                </execution>
-
-                                <execution>
-                                    <id>generate-pdf</id>
-                                    <goals>
-                                        <goal>doc</goal>
-                                    </goals>
-                                    <phase>site</phase>
-                                    <configuration>
-                        
-                                        <generatorOptions>
-                                            <generator>pdf</generator>
-                                            <inputPaths>${markdown.inputPaths}</inputPaths>
-                                        </generatorOptions>
-                                        
-                                        <pdfGeneratorOptions>
-                                            <resultFile>${project.build.directory}/${project.artifactId}.pdf</resultFile>
-                                            <generateTOC>true</generateTOC>
-                                        </pdfGeneratorOptions>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-                <plugins>
-                <!--
-                    <plugin>
-                      <artifactId>maven-antrun-plugin</artifactId>
-                      <executions>
-                        <execution>
-                          <phase>package</phase>
-                          <configuration>
-                            <tasks>
-                              <mkdir dir="target/site"/>
-                            </tasks>
-                          </configuration>
-                          <goals>
-                            <goal>run</goal>
-                          </goals>
-                        </execution>
-                      </executions>
-                    </plugin>
-                -->
-
-                    <plugin>
-                        <groupId>se.natusoft.tools.doc.markdowndoc</groupId>
-                        <artifactId>markdowndoc-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
+               <pluginManagement>
+                   <plugins>
+                       <plugin>
+                           <groupId>org.apache.maven.plugins</groupId>
+                           <artifactId>maven-site-plugin</artifactId>
+                           <configuration>
+                               <skipDeploy>false</skipDeploy>
+                           </configuration>
+                       </plugin>
+                   </plugins>
+               </pluginManagement>
             </build>
         </profile>
     </profiles>
 
 
+    <distributionManagement>
+        <site>
+            <id>ejava.site</id>
+            <url>${site.deploy.url}</url>
+        </site>
+    </distributionManagement>
 </project>

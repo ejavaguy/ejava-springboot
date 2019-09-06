@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples</groupId>
+        <artifactId>examples-root</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>info.ejava.examples.app.config</groupId>
+    <artifactId>app-config</artifactId>
+    <packaging>pom</packaging>
+    <name>App::Config</name>
+    <description>
+    </description>
+
+    <modules>
+        <module>hello-service</module>
+        <module>hello-starter</module>
+        <module>hello-properties-starter</module>
+
+        <module>springboot-appconfig-example</module>
+
+        <module>springboot-valueinject-example</module>
+        <module>springboot-propertysource-example</module>
+
+        <module>springboot-starterconfig-example</module>
+        <module>springboot-starterproperties-example</module>
+        <module>springboot-config-intro-docs</module>
+    </modules>
+</project>

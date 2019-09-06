@@ -1,0 +1,40 @@
+<configuration debug="false">
+    <contextName>Logger Tree</contextName>
+
+    <!-- bring in Spring Boot defaults for Logback -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- leverages what Spring Boot would have given us for console -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>CONSOLE  ${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+    <appender name="X-appender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>X        ${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="security-appender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>SECURITY ${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <springProfile name="appenders">
+        <logger name="X">
+            <appender-ref ref="X-appender"/>
+        </logger>
+
+        <!-- this logger starts a new tree of appenders, nothing gets written to root logger -->
+        <logger name="security" additivity="false">
+            <appender-ref ref="security-appender"/>
+        </logger>
+    </springProfile>
+
+    <root>
+        <appender-ref ref="console"/>
+    </root>
+</configuration>

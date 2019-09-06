@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.examples.svc.api</groupId>
+        <artifactId>svc-api</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>rpc-greeter-example</artifactId>
+    <packaging>pom</packaging>
+    <name>Services::API::Simple RPC Greeter Example</name>
+    <description>
+        This project provides an introductory example of a 
+        simple Spring MVC RPC API and calls
+    </description>
+
+    <modules>
+        <module>rpc-greeter-svc</module>
+    </modules>
+</project>

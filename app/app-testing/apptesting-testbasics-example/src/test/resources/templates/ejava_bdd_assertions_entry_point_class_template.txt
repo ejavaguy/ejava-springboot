@@ -1,0 +1,17 @@
+package ${package};
+
+/**
+ * Entry point for BDD assertions of different data types.
+ */
+@javax.annotation.Generated(value="assertj-assertions-generator")
+public class BddAssertions extends org.assertj.core.api.BDDAssertions {
+${all_assertions_entry_points}
+  /**
+   * Creates a new <code>{@link BddAssertions}</code>.
+   */
+  protected BddAssertions() {
+    // empty
+  }
+
+  public static final BddAssertions and = new BddAssertions();
+}
