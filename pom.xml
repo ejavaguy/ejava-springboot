@@ -12,7 +12,7 @@
     <artifactId>examples-root</artifactId>
     <packaging>pom</packaging>
 
-    <name>EJava Course</name>
+    <name>EJava 605.784</name>
     <description>
         This project provides the root for all example and exercise source code modules.
     </description>
