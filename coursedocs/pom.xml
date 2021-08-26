@@ -488,6 +488,13 @@
             <dependencies>
               <dependency>
                   <groupId>info.ejava.docs.svc.container</groupId>
+                  <artifactId>heroku-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+              <dependency>
+                  <groupId>info.ejava.docs.svc.container</groupId>
                   <artifactId>docker-notes</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
@@ -495,15 +502,7 @@
               </dependency>
               <dependency>
                   <groupId>info.ejava.docs.svc.container</groupId>
-                  <artifactId>heroku-notes</artifactId>
-                  <version>${project.version}</version>
-                  <type>war</type>
-                  <scope>runtime</scope>
-              </dependency>
-
-              <dependency>
-                  <groupId>info.ejava.docs.svc.container</groupId>
-                  <artifactId>integration-unittest-notes</artifactId>
+                  <artifactId>heroku-docker-notes</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                   <scope>runtime</scope>
@@ -511,20 +510,6 @@
               <dependency>
                   <groupId>info.ejava.docs.svc.container</groupId>
                   <artifactId>dockercompose-notes</artifactId>
-                  <version>${project.version}</version>
-                  <type>war</type>
-                  <scope>runtime</scope>
-              </dependency>
-              <dependency>
-                  <groupId>info.ejava.docs.svc.container</groupId>
-                  <artifactId>testcontainers-notes</artifactId>
-                  <version>${project.version}</version>
-                  <type>war</type>
-                  <scope>runtime</scope>
-              </dependency>
-              <dependency>
-                  <groupId>info.ejava.docs.svc.container</groupId>
-                  <artifactId>testcontainers-spock-notes</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                   <scope>runtime</scope>
@@ -589,6 +574,14 @@
               </dependency>
 
               <dependency>
+                  <groupId>info.ejava.docs.db</groupId>
+                  <artifactId>heroku-db-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+
+              <dependency>
                   <groupId>info.ejava.docs.db.validation</groupId>
                   <artifactId>validation-notes</artifactId>
                   <version>${project.version}</version>
@@ -606,6 +599,35 @@
               <dependency>
                   <groupId>info.ejava.docs.assignments</groupId>
                   <artifactId>assignment5-race-db-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+
+              <dependency>
+                  <groupId>info.ejava.docs.svc.container</groupId>
+                  <artifactId>integration-unittest-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+              <dependency>
+                  <groupId>info.ejava.docs.svc.container</groupId>
+                  <artifactId>dockercompose-it-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+              <dependency>
+                  <groupId>info.ejava.docs.svc.container</groupId>
+                  <artifactId>testcontainers-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+              <dependency>
+                  <groupId>info.ejava.docs.svc.container</groupId>
+                  <artifactId>testcontainers-spock-notes</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                   <scope>runtime</scope>

@@ -31,6 +31,7 @@
         <jaxb-core.version>2.3.0.1</jaxb-core.version>
         <jaxb-impl.version>2.3.2</jaxb-impl.version>
         <jjwt.version>0.11.2</jjwt.version>
+        <lombok.version>1.18.20</lombok.version>
         <spock.version>2.0-M2-groovy-3.0</spock.version>
         <springdoc-openapi.version>1.5.10</springdoc-openapi.version>
         <springfox-swagger.version>3.0.0</springfox-swagger.version>
@@ -54,6 +55,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- correct a java module access issue -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
 
             <!-- needed for groovy/spock testing -->
             <dependency>

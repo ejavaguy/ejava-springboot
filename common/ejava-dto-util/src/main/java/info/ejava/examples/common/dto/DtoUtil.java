@@ -3,6 +3,7 @@ package info.ejava.examples.common.dto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public abstract class DtoUtil {
@@ -17,7 +18,7 @@ public abstract class DtoUtil {
         return os.toString();
     }
     public <T> T unmarshal(String text, Class<T> type) {
-        InputStream is = new ByteArrayInputStream(text.getBytes());
+        InputStream is = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
         T object = unmarshal(is, type);
         return object;
     }
@@ -28,7 +29,7 @@ public abstract class DtoUtil {
         return os.toString();
     }
     public <T> T unmarshalThrows(String text, Class<T> type) throws IOException {
-        InputStream is = new ByteArrayInputStream(text.getBytes());
+        InputStream is = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
         T object = unmarshalThrows(is, type);
         return object;
     }

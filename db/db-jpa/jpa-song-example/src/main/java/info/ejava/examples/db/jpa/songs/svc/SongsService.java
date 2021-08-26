@@ -14,6 +14,7 @@ public interface SongsService {
     void deleteSong(int id);
     void deleteAllSongs();
 
+    Page<SongDTO> getSongs(Pageable pageable);
     Page<SongDTO> findReleasedAfter(LocalDate exclusive, Pageable pageable);
     Page<SongDTO> findSongsMatchingAll(SongDTO probe, Pageable pageable);
 

@@ -15,6 +15,10 @@
         simple Docker image.
     </description>
 
+    <properties>
+      <layered>false</layered>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -68,10 +72,8 @@
                 <configuration>
                     <excludeDevtools>false</excludeDevtools>
                     <layers>
-                        <enabled>true</enabled>
+                        <enabled>${layered}</enabled>
                     </layers>
-                    <!--
-                    -->
                 </configuration>
                 <!--
                 <executions>

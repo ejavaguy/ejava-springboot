@@ -25,7 +25,6 @@
     -->
 
     <modules>
-        <module>coursedocs</module>
         <module>intro</module>
         <module>common</module>
         <module>app</module>
@@ -146,6 +145,18 @@
 
     <profiles>
         <profile>
+            <id>coursedocs</id>
+            <activation>
+                <property>
+                    <name>!no-coursedocs</name>
+                </property>
+            </activation>
+            <modules>
+                <module>coursedocs</module>
+            </modules>
+        </profile>
+
+        <profile>
             <id>svc</id>
             <modules>
                 <module>svc</module>
@@ -175,7 +186,6 @@
                 <all-modules>true</all-modules>
             </properties>
             <modules>
-                <module>coursedocs</module>
                 <module>intro</module>
                 <module>common</module>
                 <module>app</module>

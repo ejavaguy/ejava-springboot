@@ -33,6 +33,12 @@ public class SongsServiceImpl implements SongsService {
     }
 
     @Override
+    public Page<SongDTO> getSongs(Pageable pageable) {
+        Page<Song> songs = songsRepo.findAll(pageable);
+        return mapper.map(songs);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public SongDTO getSong(int id) {
         //this way leverages Optional features
@@ -77,6 +83,7 @@ public class SongsServiceImpl implements SongsService {
     public void deleteAllSongs() {
         songsRepo.deleteAll();
     }
+
 
 
     @Override

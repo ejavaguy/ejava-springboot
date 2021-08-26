@@ -21,9 +21,26 @@
     <modules>
       <module>dockercompose-votes-client</module>
       <module>dockercompose-votes-svc</module>
-      <module>dockercompose-votes-it</module>
-      <module>testcontainers-votes-ntest</module>
-      <module>testcontainers-votes-spock-ntest</module>
     </modules>
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <activation>
+              <file>
+                <exists>/var/run/docker.sock</exists>
+              </file>
+            </activation>
+            <modules>
+                <module>dockercompose-votes-it</module>
+                <module>testcontainers-votes-ntest</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>spock</id>
+            <modules>
+                <module>testcontainers-votes-spock-ntest</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>

@@ -14,6 +14,7 @@ public interface BooksService {
     void deleteBook(String id);
     void deleteAllBooks();
 
+    Page<BookDTO> getBooks(Pageable pageable);
     Page<BookDTO> findPublishedAfter(LocalDate exclusive, Pageable pageable);
     Page<BookDTO> findBooksMatchingAll(BookDTO probe, Pageable pageable);
 }

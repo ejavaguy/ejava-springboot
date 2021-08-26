@@ -31,6 +31,12 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
+    public Page<BookDTO> getBooks(Pageable pageable) {
+        Page<Book> books = booksRepo.findAll(pageable);
+        return mapper.map(books);
+    }
+
+    @Override
     public BookDTO getBook(String id) {
         //leverage Optional features
         return booksRepo.findById(id)
@@ -71,6 +77,7 @@ public class BooksServiceImpl implements BooksService {
     public void deleteAllBooks() {
         booksRepo.deleteAll();
     }
+
 
 
     @Override

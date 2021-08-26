@@ -11,7 +11,7 @@ pipeline {
     parameters {
         string(name:'END_GOAL', defaultValue:'deploy', description:'')
         string(name:'MASTER_PROFILES', defaultValue:'-Pjacoco', description:'modules to include as semester progresses for master branch')
-        string(name:'TEST_PROFILES', defaultValue:'-Pall-modules -Dall-modules --fail-fast', description:'additional profiles for non-master branch')
+        string(name:'TEST_PROFILES', defaultValue:'-Pall-modules -Dall-docs --fail-fast', description:'additional profiles for non-master branch')
         //string(name:'TEST_PROFILES', defaultValue:'--fail-fast', description:'additional profiles for non-master branch')
         string(name:'SITE_HOST', defaultValue:'sturgeon.wse.jhu.edu', description:'')
         string(name:'SITE_CERT', defaultValue:'ejava_publish_cert', description:'')
@@ -87,7 +87,7 @@ pipeline {
             }
             steps {
                  configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_ID, targetLocation: 'settings.xml', variable: 'MAVEN_SETTINGS_PATH')]) {
-                     sh 'mvn site site:stage -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES -Preports'
+                     sh 'mvn site site:stage -s $MAVEN_SETTINGS_PATH $MODULE_PROFILES -Preports -Pejava-repos'
                  }
             }
             post {

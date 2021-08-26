@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:12.3-alpine
+    environment:
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jpa-song-example:latest
+    ports:
+      - "${API_PORT:-8080}:8080"
+    depends_on:
+      - postgres
+    environment:
+      - spring.profiles.active=integration
+      - DATABASE_URL=postgres://postgres:secret@postgres:5432/postgres

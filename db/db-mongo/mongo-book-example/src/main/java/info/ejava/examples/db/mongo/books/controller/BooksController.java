@@ -43,6 +43,22 @@ public class BooksController {
         return response;
     }
 
+
+    @RequestMapping(path=BOOKS_PATH,
+            method= RequestMethod.GET,
+            produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Page<BookDTO>> getSongs(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sort", required = false) String sortString
+    ) {
+        Pageable pageable = PageableDTO.of(pageNumber, pageSize, sortString).toPageable();
+        Page<BookDTO> result = booksService.getBooks(pageable);
+
+        ResponseEntity<Page<BookDTO>> response = ResponseEntity.ok(result);
+        return response;
+    }
+
     @RequestMapping(path= BOOK_PATH,
             method=RequestMethod.GET,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

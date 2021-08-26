@@ -544,29 +544,12 @@
         </profile>
 
         <profile>
-            <id>webdev-repos</id>
-            <activation>
-                <property>
-                    <name>!test-deploy</name>
-                </property>
-            </activation>
+            <id>ejava-repos</id>
             <repositories>
                 <repository>
-                    <id>webdev</id>
-                    <name>ejava webdev repository</name>
-                    <url>https://webdev.jhuep.com/~jcs/maven2</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>webdev-snapshot</id>
-                    <name>ejava webdev snapshot repository</name>
-                    <url>https://webdev.jhuep.com/~jcs/maven2-snapshot</url>
+                    <id>ejava-nexus</id>
+                    <name>ejava repository</name>
+                    <url>https://pika.jhuep.com/repository/ejava-snapshots</url>
                     <releases>
                         <enabled>false</enabled>
                     </releases>
@@ -576,33 +559,6 @@
                     </snapshots>
                 </repository>
             </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>webdev</id>
-                    <name>ejava webdev repository</name>
-                    <url>https://webdev.jhuep.com/~jcs/maven2</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>daily</updatePolicy>
-                    </snapshots>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>webdev-snapshot</id>
-                    <name>ejava webdev snapshot repository</name>
-                    <url>https://webdev.jhuep.com/~jcs/maven2-snapshot</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>daily</updatePolicy>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
     </profiles>
 </project>

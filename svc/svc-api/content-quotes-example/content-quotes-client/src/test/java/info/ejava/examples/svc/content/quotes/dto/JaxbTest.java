@@ -8,6 +8,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +36,7 @@ public class JaxbTest extends MarshallingTestBase {
         JAXBContext jbx = JAXBContext.newInstance(type);
         Unmarshaller unmarshaller = jbx.createUnmarshaller();
         
-        ByteArrayInputStream bis = new ByteArrayInputStream(buffer.getBytes());
+        ByteArrayInputStream bis = new ByteArrayInputStream(buffer.getBytes(StandardCharsets.UTF_8));
         T result = (T) unmarshaller.unmarshal(bis);
         log.info("{} fromXml: {}", buffer, result);
         return result;

@@ -20,6 +20,13 @@
 
     <modules>
         <module>apptesting-testbasics-example</module>
-        <module>apptesting-spock-example</module>
     </modules>
+    <profiles>
+        <profile>
+            <id>spock</id>
+            <modules>
+                <module>apptesting-spock-example</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
