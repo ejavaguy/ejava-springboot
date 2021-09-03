@@ -549,7 +549,7 @@
                 <repository>
                     <id>ejava-nexus</id>
                     <name>ejava repository</name>
-                    <url>https://pika.jhuep.com/repository/ejava-snapshots</url>
+                    <url>https://pika.jhuep.com/nexus/repository/ejava-snapshots</url>
                     <releases>
                         <enabled>false</enabled>
                     </releases>
