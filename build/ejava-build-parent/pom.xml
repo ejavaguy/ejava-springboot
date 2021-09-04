@@ -113,6 +113,11 @@
                                 <additionalClasspathElements>
                                     <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
                                 </additionalClasspathElements>
+
+                                <!-- can be removed when M6 released
+                                https://stackoverflow.com/questions/65693223/spring-autowire-does-not-find-beans-through-mvn-verify
+                                -->
+                                <useModulePath>false</useModulePath>
                             </configuration>
                         </execution>
                         <execution>
