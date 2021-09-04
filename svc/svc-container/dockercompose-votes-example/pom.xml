@@ -36,7 +36,13 @@
             </modules>
         </profile>
         <profile>
-            <id>spock</id>
+            <id>spock-modules</id>
+            <modules>
+                <module>testcontainers-votes-spock-ntest</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>all-modules</id>
             <modules>
                 <module>testcontainers-votes-spock-ntest</module>
             </modules>

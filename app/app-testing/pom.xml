@@ -23,7 +23,13 @@
     </modules>
     <profiles>
         <profile>
-            <id>spock</id>
+            <id>spock-modules</id>
+            <modules>
+                <module>apptesting-spock-example</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>all-modules</id>
             <modules>
                 <module>apptesting-spock-example</module>
             </modules>
