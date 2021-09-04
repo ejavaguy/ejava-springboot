@@ -30,13 +30,13 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
         <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
         <maven-verifier-plugin.version>1.1</maven-verifier-plugin.version>
 
@@ -46,11 +46,12 @@
         <docker-compose-maven-plugin.version>0.8.0</docker-compose-maven-plugin.version>
         <dockerfile-maven-plugin.version>1.4.10</dockerfile-maven-plugin.version>
         <flatten-maven-plugin.version>1.2.4</flatten-maven-plugin.version>
+        <gmavenplus-plugin.version>1.12.1</gmavenplus-plugin.version>
         <heroku-maven-plugin.version>3.0.3</heroku-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
-        <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
+        <maven-surefire-report-plugin.version>3.0.0-M5</maven-surefire-report-plugin.version>
 
         <!-- other plugins -->
     </properties>
@@ -467,7 +468,7 @@
                 <dependency>
                   <groupId>net.bytebuddy</groupId>
                   <artifactId>byte-buddy</artifactId>
-                  <version>1.9.3</version>
+                  <version>1.11.0</version>
                   <scope>test</scope>
                 </dependency>
                 -->
@@ -475,7 +476,7 @@
                 <dependency>
                   <groupId>org.objenesis</groupId>
                   <artifactId>objenesis</artifactId>
-                  <version>2.6</version>
+                  <version>3.2</version>
                   <scope>test</scope>
                 </dependency>
                 -->
@@ -486,7 +487,7 @@
                         <!-- used to compile Groovy code -->
                         <groupId>org.codehaus.gmavenplus</groupId>
                         <artifactId>gmavenplus-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${gmavenplus-plugin.version}</version>
                         <executions>
                             <execution>
                                 <goals>
