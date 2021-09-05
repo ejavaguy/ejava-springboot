@@ -41,12 +41,14 @@ public class ClientTestConfiguration {
                 .withExposedService("api", 8080)
                 .withExposedService("activemq", 61616)
                 .withExposedService("postgres", 5432)
-                .withExposedService("mongo", 27017);
+                .withExposedService("mongo", 27017)
+                .withLocalCompose(true);
         return env;
     }
 
     public static void initProperties(DynamicPropertyRegistry registry, DockerComposeContainer env) {
         registry.add("it.server.port", ()->env.getServicePort("api", 8080));
+        registry.add("it.server.host", ()->env.getServiceHost("api", null));
         registry.add("spring.data.mongodb.uri",()-> mongoUrl(
                 env.getServiceHost("mongo", null),
                 env.getServicePort("mongo", 27017)

@@ -59,6 +59,7 @@ public class ClientTestConfiguration {
 
     public static void initProperties(DynamicPropertyRegistry registry, DockerComposeContainer env) {
         registry.add("it.server.port", ()->env.getServicePort("api", 8080));
+        registry.add("it.server.host", ()->env.getServiceHost("api", null));
         registry.add("spring.data.mongodb.uri",()-> mongoUrl(
                 env.getServiceHost("mongo", null),
                 env.getServicePort("mongo", 27017)

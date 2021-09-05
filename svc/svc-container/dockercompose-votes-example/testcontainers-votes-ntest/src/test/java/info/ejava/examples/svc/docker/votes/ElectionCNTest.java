@@ -74,7 +74,7 @@ public class ElectionCNTest {
     @BeforeEach
     public void init() throws IOException, InterruptedException {
         log.info("votesUrl={}", votesUrl);
-        log.info("electionsUrl={}", votesUrl);
+        log.info("electionsUrl={}", electionsUrl);
 
         /**
          * wait for various events relative to our containers
