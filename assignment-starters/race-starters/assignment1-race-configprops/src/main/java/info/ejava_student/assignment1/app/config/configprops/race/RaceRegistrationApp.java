@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,12 @@ public class RaceRegistrationApp {
 
     @Configuration
     public class RaceConfiguration {
+        public List<EventProperties> swims() {
+            return new ArrayList<>();
+        }
+        public List<EventProperties> runs() {
+            return new ArrayList<>();
+        }
     }
 
     //@Component
