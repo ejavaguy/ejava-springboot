@@ -156,8 +156,13 @@
         <profile>
             <id>config</id>
             <activation>
+              <!--
                 <property>
                     <name>all-docs</name>
+                </property>
+                -->
+                <property>
+                    <name>!no-config</name>
                 </property>
             </activation>
             <dependencies>

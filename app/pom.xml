@@ -19,10 +19,8 @@
 
     <modules>
         <module>app-build</module>
-        <!--
         <module>app-config</module>
         <module>app-testing</module>
-        -->
     </modules>
 
     <profiles>

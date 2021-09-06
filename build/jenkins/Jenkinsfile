@@ -12,7 +12,6 @@ pipeline {
         string(name:'END_GOAL', defaultValue:'deploy', description:'')
         string(name:'MASTER_PROFILES', defaultValue:'-Pjacoco', description:'modules to include as semester progresses for master branch')
         string(name:'TEST_PROFILES', defaultValue:'-Pall-modules -Dall-docs --fail-fast', description:'additional profiles for non-master branch')
-        //string(name:'TEST_PROFILES', defaultValue:'--fail-fast', description:'additional profiles for non-master branch')
         string(name:'SITE_HOST', defaultValue:'sturgeon.wse.jhu.edu', description:'')
         string(name:'SITE_CERT', defaultValue:'ejava_publish_cert', description:'')
         string(name:'SITE_DEPLOY', defaultValue:'site:deploy -Dremote-deploy', description:'site deploy goal and options')
