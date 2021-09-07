@@ -16,12 +16,22 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-09-06: Published config materials and Assignment 1
 * 2021-09-02: Restored assignment0 partB contents
 * 2021-08-30: Minor devenv notes updates
 * 2021-08-24: Posted initial class site
 
 [id="todo"]
 === Class To Do
+
+* week02: Application Configuration
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[App Config set of lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-config[App Config examples]
+** begin work on link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1a_race_app_config[App Config Assignment 1a]
+
+[id="completed"]
+=== Things you should have completed!
+
 
 * week01: Course Intro
 ** register for https://blackboard.jhu.edu/webapps/discussionboard/do/conference?action=list_forums&course_id=_243975_1&nav=discussion_board_entry[newsgroup] and setup e-mail handling
@@ -30,9 +40,6 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 ** complete and turn in link:coursedocs/content/html_single/assignment0-race-build-notes.html[assignment 0]
 ** post your weekly newsgroup contribution based on development environment setup
 
-
-[id="completed"]
-=== Things you should have completed!
 
 * week01: Course Intro
 ** had a nice break!
