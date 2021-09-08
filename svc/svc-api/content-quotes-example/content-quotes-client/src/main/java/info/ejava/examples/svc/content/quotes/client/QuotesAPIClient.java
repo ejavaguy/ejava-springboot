@@ -16,7 +16,6 @@ import java.net.URI;
 @Slf4j
 public class QuotesAPIClient implements QuotesAPI {
     private final URI baseUrl;
-    private final RestTemplate restTemplate=null;
     private final WebClient webClient;
     private final MediaType mediaType;
 
