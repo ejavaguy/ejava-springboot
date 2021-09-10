@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-09-10: Corrected assignment 1b properties file name and contents
 * 2021-09-06: Published config materials and Assignment 1
 * 2021-09-02: Restored assignment0 partB contents
 * 2021-08-30: Minor devenv notes updates
