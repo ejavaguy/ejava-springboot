@@ -334,12 +334,6 @@
                             <release>${java.target.version}</release>
                             <!-- add metadata to method parameters -->
                             <parameters>true</parameters>
-                            <!--
-                               the above is being seen by plugin, but does not seem to generate
-                               necessary parameter metadata until explicitly adding the 
-                               -parameters argument
-                            -->
-                            <compilerArgs>-parameters</compilerArgs>
                         </configuration>
                     </plugin>
                 </plugins>
