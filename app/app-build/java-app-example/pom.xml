@@ -16,10 +16,6 @@
       This project provides an example of a simple Java main application in a JAR.
     </description>
 
-    <properties>
-        <jarfile>${project.build.directory}</jarfile>
-    </properties>
-
     <build>
       <plugins>
         <plugin>
