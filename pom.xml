@@ -28,8 +28,9 @@
         <module>intro</module>
         <module>common</module>
         <module>app</module>
-        <!--
         <module>svc</module>
+        <module>assignment-support</module>
+        <!--
         <module>db</module>
         <module>async</module>
         -->

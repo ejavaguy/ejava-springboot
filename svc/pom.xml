@@ -21,8 +21,21 @@
 
     <modules>
         <module>svc-api</module>
+        <!--
         <module>svc-security</module>
         <module>svc-aop</module>
         <module>svc-container</module>
+        -->
     </modules>
+
+    <profiles>
+        <profile>
+            <id>all-modules</id>
+            <modules>
+                <module>svc-security</module>
+                <module>svc-aop</module>
+                <module>svc-container</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

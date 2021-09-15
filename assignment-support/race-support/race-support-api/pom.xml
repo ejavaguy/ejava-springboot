@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava.assignments.race</groupId>
+        <artifactId>race-support</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>info.ejava.assignments.api.race</groupId>
+    <artifactId>race-support-api</artifactId>
+    <packaging>pom</packaging>
+    <name>Assignments::Race Support::API Root</name>
+
+    <description>
+    This module tree contains starter building block services for building
+    Race Registration. Contained here are simple but complete representations
+    of Races and Racers. The repositories are stubbed, but the basic functionality
+    is complete.
+    </description>
+
+    <modules>
+        <module>race-support-api-client</module>
+        <module>race-support-api-svc</module>
+    </modules>
+</project>

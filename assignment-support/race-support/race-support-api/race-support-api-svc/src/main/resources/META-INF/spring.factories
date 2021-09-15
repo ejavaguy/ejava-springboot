@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    info.ejava.assignments.race.autoconfigure.RacesConfiguration,\
+    info.ejava.assignments.race.autoconfigure.RacersConfiguration
