@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-09-14: Published logging materials
 * 2021-09-10: Corrected assignment 1b properties file name and contents
 * 2021-09-06: Published config materials and Assignment 1
 * 2021-09-02: Restored assignment0 partB contents
@@ -25,14 +26,18 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id="todo"]
 === Class To Do
 
-* week02: Application Configuration
-** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[App Config set of lecture notes]
+* week03: Auto-Configuration and Logging
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-config[App Config examples]
-** begin work on link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1a_race_app_config[App Config Assignment 1a]
+** begin work on link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1b_race_logging[App Config Assignment 1a]
 
 [id="completed"]
 === Things you should have completed!
 
+* week02: Application Configuration
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[App Config set of lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-config[App Config examples]
+** working on link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1a_race_app_config[App Config Assignment 1a]
 
 * week01: Course Intro
 ** register for https://blackboard.jhu.edu/webapps/discussionboard/do/conference?action=list_forums&course_id=_243975_1&nav=discussion_board_entry[newsgroup] and setup e-mail handling
