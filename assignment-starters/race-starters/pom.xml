@@ -19,6 +19,7 @@
       <module>assignment1-race-autoconfig</module>
       <module>assignment1-race-logging</module>
       <module>assignment1-race-testing</module>
+      <module>assignment2-race-api</module>
     </modules>
 
 </project>

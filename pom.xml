@@ -29,6 +29,7 @@
         <module>common</module>
         <module>app</module>
         <module>svc</module>
+        <module>assignment-starters</module>
         <module>assignment-support</module>
         <!--
         <module>db</module>
