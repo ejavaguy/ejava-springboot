@@ -1,4 +1,4 @@
-package info.ejava_student.assignment1.testing.races.racer.dto;
+package info.ejava.assignments.testing.race.racers.dto;
 
 import lombok.*;
 

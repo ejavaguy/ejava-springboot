@@ -1,6 +1,6 @@
-package info.ejava_student.assignment1.testing.races.racer.svc;
+package info.ejava.assignments.testing.race.racers.svc;
 
-import info.ejava_student.assignment1.testing.races.racer.dto.RacerDTO;
+import info.ejava.assignments.testing.race.racers.dto.RacerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

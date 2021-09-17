@@ -22,17 +22,16 @@
     <name>EJava Student::Assignment1::App Testing</name>
 
     <dependencies>
+        <!-- contains what you will be testing -->
+        <dependency>
+            <groupId>info.ejava.assignments.testing.race</groupId>
+            <artifactId>race-support-testing</artifactId>
+            <version>${ejava.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

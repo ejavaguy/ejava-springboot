@@ -1,6 +1,7 @@
 package info.ejava_student.assignment1.testing.races.racer.svc;
 
-import info.ejava_student.assignment1.testing.races.racer.dto.RacerDTO;
+import info.ejava.assignments.testing.race.racers.dto.RacerDTO;
+import info.ejava.assignments.testing.race.racers.svc.RacerRegistrationService;
 import org.junit.jupiter.api.Test;
 
 public class RacerRegistrationBddNXxx {

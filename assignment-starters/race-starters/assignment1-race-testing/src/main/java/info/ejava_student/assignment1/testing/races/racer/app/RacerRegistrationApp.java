@@ -1,9 +1,9 @@
 package info.ejava_student.assignment1.testing.races.racer.app;
 
-import info.ejava_student.assignment1.testing.races.racer.RacerRegistrationConfig;
-import info.ejava_student.assignment1.testing.races.racer.dto.RacerDTO;
-import info.ejava_student.assignment1.testing.races.racer.svc.InvalidInputException;
-import info.ejava_student.assignment1.testing.races.racer.svc.RacerRegistrationService;
+import info.ejava.assignments.testing.race.racers.RacerRegistrationConfig;
+import info.ejava.assignments.testing.race.racers.dto.RacerDTO;
+import info.ejava.assignments.testing.race.racers.svc.InvalidInputException;
+import info.ejava.assignments.testing.race.racers.svc.RacerRegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

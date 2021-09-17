@@ -1,6 +1,6 @@
-package info.ejava_student.assignment1.testing.races.racer;
+package info.ejava.assignments.testing.race.racers;
 
-import info.ejava_student.assignment1.testing.races.racer.svc.*;
+import info.ejava.assignments.testing.race.racers.svc.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
