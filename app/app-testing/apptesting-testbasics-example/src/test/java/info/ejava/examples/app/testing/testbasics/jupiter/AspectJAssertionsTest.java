@@ -49,9 +49,11 @@ public class AspectJAssertionsTest {
         assertThat(ex1).hasMessage("example exception");
 
         RuntimeException ex2 = catchThrowableOfType(
-                ()->{ throw new IllegalArgumentException("example exception"); },
+                ()->{
+                    throw new IllegalArgumentException("example exception");
+                    },
                 RuntimeException.class);
-        assertThat(ex1).hasMessage("example exception");
+        assertThat(ex2).hasMessage("example exception");
     }
 
     //BDD exceptions
