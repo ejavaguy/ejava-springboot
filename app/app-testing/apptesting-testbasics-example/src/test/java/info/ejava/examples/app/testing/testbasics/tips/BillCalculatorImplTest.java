@@ -14,6 +14,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
+/**
+ * This example unit test leverages Mockito to instantiate the subject(s) under test
+ * and inject Mocks into those instances.
+ */
+
 @Tag("tips")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @DisplayName("Bill CalculatorImpl")
@@ -22,6 +27,9 @@ public class BillCalculatorImplTest {
     @Mock
     TipCalculator tipCalculatorMock;
 
+    /*
+    Mockito is instantiating this implementation class for us an injecting Mocks
+     */
     @InjectMocks
     BillCalculatorImpl billCalculator;
 

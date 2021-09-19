@@ -48,6 +48,25 @@ public class ExampleMockitoTest {
         assertThat(secret1).as("unexpected first result").isEqualTo("springboot");
         assertThat(secret2).as("unexpected second result").isEqualTo("testing");
     }
+    @Test
+    public void listMap_no_capture() {
+        //define behavior of mock during test
+        when(mapMock.get(anyString())) //not capturing input
+                .thenReturn("springboot", "testing");
+
+        //conduct test
+        int size = mapMock.size();
+        String secret1 = mapMock.get("happiness");
+        String secret2 = mapMock.get("joy");
+
+        //evaluate results
+        verify(mapMock).size(); //verify called once
+        verify(mapMock, times(2)).get(anyString()); //verify called twice
+        //verify what was returned by mock
+        assertThat(size).as("unexpected size").isZero();
+        assertThat(secret1).as("unexpected first result").isEqualTo("springboot");
+        assertThat(secret2).as("unexpected second result").isEqualTo("testing");
+    }
 
     @Nested @Tag("bdd")
     public class when_has_key {

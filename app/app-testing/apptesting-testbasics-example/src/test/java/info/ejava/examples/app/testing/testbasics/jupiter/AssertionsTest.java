@@ -1,6 +1,7 @@
 package info.ejava.examples.app.testing.testbasics.jupiter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.BDDAssertions;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -23,6 +24,8 @@ class AssertionsTest {
         MatcherAssert.assertThat(lhs+rhs, Matchers.is(expected));
         //AssertJ assertion
         org.assertj.core.api.Assertions.assertThat(lhs+rhs).isEqualTo(expected);
+        //AssertJ BDD
+        BDDAssertions.then(lhs+rhs).isEqualTo(expected);
     }
 
     @Test
@@ -36,10 +39,13 @@ class AssertionsTest {
         MatcherAssert.assertThat("math error",lhs+rhs, Matchers.is(expected));
         //AssertJ assertion
         org.assertj.core.api.Assertions.assertThat(lhs+rhs)
-                .as("math error")
-                .isEqualTo(expected);
+                ;
         org.assertj.core.api.Assertions.assertThat(lhs+rhs)
                 .as("math error %d+%d!=%d",lhs,rhs,expected)
+                .isEqualTo(expected);
+        //AssertJ BDD
+        BDDAssertions.then(lhs+rhs)
+                .as("math error")
                 .isEqualTo(expected);
     }
 

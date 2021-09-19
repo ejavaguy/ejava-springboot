@@ -4,10 +4,12 @@ import info.ejava.examples.app.testing.testbasics.Assertions;
 import info.ejava.examples.app.testing.testbasics.PeopleFactory;
 import info.ejava.examples.app.testing.testbasics.Person;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.BDDAssertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import static info.ejava.examples.app.testing.testbasics.BddAssertions.*;
+import static org.assertj.core.api.BDDAssertions.thenExceptionOfType;
 
 @Slf4j
 public class AspectJAssertionsTest {
@@ -50,6 +52,20 @@ public class AspectJAssertionsTest {
                 ()->{ throw new IllegalArgumentException("example exception"); },
                 RuntimeException.class);
         assertThat(ex1).hasMessage("example exception");
+    }
+
+    //BDD exceptions
+    @Test
+    public void bdd_exceptions() {
+        //BDD syntax only has evaluations
+        BDDAssertions.thenThrownBy(()-> {
+                    throw new IllegalArgumentException("example exception");
+                }).hasMessage("example exception");
+
+        thenExceptionOfType(RuntimeException.class).isThrownBy(
+                () -> {
+                    throw new IllegalArgumentException("example exception");
+                }).withMessage("example exception");
     }
 
     //all
