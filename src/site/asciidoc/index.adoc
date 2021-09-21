@@ -16,6 +16,9 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-09-22: Extended Assignment 1 due date and reorganized API/Security schedule
+* 2021-09-22: Published testing and HTTP API materials
+* 2021-09-22: Corrected logging assignment profile reference
 * 2021-09-14: Published logging materials
 * 2021-09-10: Corrected assignment 1b properties file name and contents
 * 2021-09-06: Published config materials and Assignment 1
@@ -26,13 +29,19 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id="todo"]
 === Class To Do
 
-* week03: Auto-Configuration and Logging
+* week04: Testing and HTTP-API
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
-** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-config[App Config examples]
-** begin work on link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1b_race_logging[App Config Assignment 1a]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-testing/apptesting-testbasics-example[Testing examples]
+** begin/complete link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1c_race_testing[Testing Assignment 1c]
+** turn in all parts of Assignment 1 by Wed, Sep29, 6am. This is an extension from original date
 
 [id="completed"]
 === Things you should have completed!
+
+* week03: Auto-Configuration and Logging
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-config[App Config and Logging examples]
+** begin work on link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1b_race_logging[App Config Assignment 1b]
 
 * week02: Application Configuration
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[App Config set of lecture notes]
