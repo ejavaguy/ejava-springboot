@@ -42,6 +42,11 @@ public class BaseExceptionAdvice {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getError(), ex.getMessage(), ex.getDate());
     }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<MessageDTO> handle(NotAuthorizedException ex) {
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getError(), ex.getMessage(), ex.getDate());
+    }
+
     @ExceptionHandler(InternalErrorException.class)
     public ResponseEntity<MessageDTO> handle(InternalErrorException ex) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getError(), ex.getMessage(), ex.getDate());

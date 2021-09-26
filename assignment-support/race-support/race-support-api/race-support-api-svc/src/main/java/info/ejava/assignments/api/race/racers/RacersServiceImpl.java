@@ -6,6 +6,8 @@ import info.ejava.examples.common.exceptions.ClientErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Slf4j
 public class RacersServiceImpl implements RacersService {
@@ -24,6 +26,11 @@ public class RacersServiceImpl implements RacersService {
                     log.debug("getRacer({}) not found", id);
                     return new ClientErrorException.NotFoundException("Racer[%s] not found", id);
                 });
+    }
+
+    @Override
+    public Optional<RacerDTO> getRacerByUsername(String username) {
+        return racersRepository.findByUsername(username);
     }
 
     @Override

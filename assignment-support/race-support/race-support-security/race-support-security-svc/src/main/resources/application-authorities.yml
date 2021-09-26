@@ -1,0 +1,24 @@
+race:
+  accounts:
+    - username: professor
+      password: secret
+      authorities:
+        - ROLE_ADMIN
+        - ROLE_MEMBER
+    - username: skipper
+      password: secret
+      authorities:
+        - ROLE_MGR
+    - username: gilligan
+      password: secret
+      authorities:
+        - ROLE_MEMBER
+        - PROXY
+    - username: ginger
+      password: secret
+      authorities:
+        - ROLE_MEMBER
+    - username: thurston
+      password: gold
+      authorities:
+        - ROLE_MEMBER

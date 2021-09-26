@@ -1,5 +1,6 @@
 package info.ejava.assignments.api.race.client.races;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import info.ejava.assignments.api.race.client.StreetAddressDTO;
 import lombok.*;
 
@@ -16,4 +17,6 @@ public class RaceDTO {
     private double eventLength;
     LocalDate eventDate;
     StreetAddressDTO location;
+    @JsonIgnore
+    private String ownername;
 }

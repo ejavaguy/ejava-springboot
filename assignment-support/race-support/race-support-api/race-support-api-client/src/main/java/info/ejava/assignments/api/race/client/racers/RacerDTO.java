@@ -1,5 +1,6 @@
 package info.ejava.assignments.api.race.client.racers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,4 +17,6 @@ public class RacerDTO {
     private String lastName;
     private LocalDate dob;
     private String gender;
+    @JsonIgnore
+    private String username;
 }

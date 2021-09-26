@@ -9,6 +9,7 @@ public interface RacersRepository {
     RacerDTO save(RacerDTO racer);
     boolean existsById(String id);
     Optional<RacerDTO> findById(String id);
+    Optional<RacerDTO> findByUsername(String username);
     List<RacerDTO> findAll(int pageSize, int pageNumber);
     void delete(RacerDTO racer);
     void deleteAll();

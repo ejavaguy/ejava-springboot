@@ -46,4 +46,9 @@ public abstract class ClientErrorException extends RuntimeException {
         public InvalidInputException(String message, Object...args) {  super(message, args); }
         public InvalidInputException(Throwable cause, String message, Object...args) { super(cause, message, args); }
     }
+
+    public static class NotAuthorizedException extends ClientErrorException {
+        public NotAuthorizedException(String message, Object...args) {  super(message, args); }
+        public NotAuthorizedException(Throwable cause, String message, Object...args) { super(cause, message, args); }
+    }
 }

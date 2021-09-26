@@ -2,7 +2,7 @@ package info.ejava.assignments.api.race.config;
 
 import info.ejava.assignments.api.race.autoconfigure.RacersConfiguration;
 import info.ejava.assignments.api.race.autoconfigure.RacesConfiguration;
-import info.ejava.examples.common.web.paging.RestTemplateConfig;
+import info.ejava.examples.common.web.RestTemplateConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

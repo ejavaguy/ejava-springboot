@@ -34,6 +34,14 @@ public class RacersRepositoryImpl implements RacersRepository {
     }
 
     @Override
+    public Optional<RacerDTO> findByUsername(String username) {
+        return username==null ? Optional.empty() :
+                racers.values().stream()
+                .filter(r->username.equals(r.getUsername()))
+                .findFirst();
+    }
+
+    @Override
     public List<RacerDTO> findAll(int pageSize, int pageNumber) {
         int startAt = pageSize * pageNumber;
         int endBefore = startAt + pageSize < racers.size() ? startAt + pageSize : racers.size();
