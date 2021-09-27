@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-09-29: Published Service/Web API materials
 * 2021-09-22: Extended Assignment 1 due date and reorganized API/Security schedule
 * 2021-09-22: Published testing and HTTP API materials
 * 2021-09-22: Corrected logging assignment profile reference
@@ -29,14 +30,23 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id="todo"]
 === Class To Do
 
+* week05: Service/Web API
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/rpc-greeter-example[RPC Greeter example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/springmvc-todos[Spring MVC TODOs example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/httpapi-gestures-example[HTTP-API Gestures example]
+** begin link:coursedocs/content/html_single/assignment2-race-api-notes.html[API Assignment 2].
+Complete parts 2a (modules), 2c (resources), and 2d (web client/API interactions)
+** "Late pass" assignment 1 submissions due by Sun03, 6am. 1 Week late assignment 1 submissions due by Wed06, 6am
+
+[id="completed"]
+=== Things you should have completed!
+
 * week04: Testing and HTTP-API
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/app/app-testing/apptesting-testbasics-example[Testing examples]
 ** begin/complete link:coursedocs/content/html_single/assignment1-race-app-notes.html#assignment1c_race_testing[Testing Assignment 1c]
-** turn in all parts of Assignment 1 by Wed, Sep29, 6am. This is an extension from original date
-
-[id="completed"]
-=== Things you should have completed!
+** turned in all parts of Assignment 1 by Wed, Sep29, 6am. This was an extension from original date. Late pass due Sun03, 6am
 
 * week03: Auto-Configuration and Logging
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
