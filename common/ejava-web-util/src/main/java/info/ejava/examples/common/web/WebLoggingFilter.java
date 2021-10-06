@@ -20,17 +20,12 @@ public class WebLoggingFilter {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
         filter.setIncludeQueryString(true);
         filter.setIncludePayload(true);
-        filter.setMaxPayloadLength(1000);
+        filter.setMaxPayloadLength(2000);
         filter.setBeforeMessagePrefix(System.lineSeparator());
         filter.setAfterMessagePrefix(System.lineSeparator());
         filter.setIncludeHeaders(true);
         filter.setHeaderPredicate(h->{
-            for (String pattern: excludes) {
-                if (h.matches(pattern)) {
-                    return false;
-                }
-            }
-            return true;
+            return !excludes.stream().filter(e->h.matches(e)).findFirst().isPresent();
         });
         return filter;
     }
