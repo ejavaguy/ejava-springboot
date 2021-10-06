@@ -87,11 +87,11 @@ public class QuotesRestTemplateNTest {
         QuoteDTO validQuote = quotesFactory.make();
 
         //when - making a request using different request and accept payload types
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(contentType);
-        headers.setAccept(Collections.singletonList(acceptType));
-        HttpEntity<QuoteDTO> quoteEntity = new HttpEntity<>(validQuote, headers);
-        ResponseEntity<QuoteDTO> response = restTemplate.postForEntity(quotesUrl, quoteEntity, QuoteDTO.class);
+        RequestEntity request = RequestEntity.post(quotesUrl)
+                .contentType(contentType)
+                .accept(acceptType)
+                .body(validQuote);
+        ResponseEntity<QuoteDTO> response = restTemplate.exchange(request, QuoteDTO.class);
 
         //then the service will accept the format we supplied
         then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -115,9 +115,10 @@ public class QuotesRestTemplateNTest {
         assertThat(quoteResponse.getStatusCode().series()).isEqualTo(HttpStatus.OK.series());
         int requestId = quoteResponse.getBody().getId();
         URI quoteUrl = UriComponentsBuilder.fromUri(baseUrl).path(QuotesAPI.QUOTE_PATH).build(requestId);
+        RequestEntity request = RequestEntity.get(quoteUrl).build();
 
         //when - requesting quote by id
-        ResponseEntity<QuoteDTO> response = restTemplate.getForEntity(quoteUrl, QuoteDTO.class);
+        ResponseEntity<QuoteDTO> response = restTemplate.exchange(request, QuoteDTO.class);
 
         //then ...
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -132,7 +133,8 @@ public class QuotesRestTemplateNTest {
         Map<Integer, QuoteDTO> existingQuotes = new HashMap<>();
         QuoteListDTO quotes = quotesFactory.listBuilder().make(3, 3);
         for (QuoteDTO quote: quotes.getQuotes()) {
-            ResponseEntity<QuoteDTO> quoteResponse = restTemplate.postForEntity(quotesUrl, quote, QuoteDTO.class);
+            RequestEntity request = RequestEntity.post(quotesUrl).body(quote);
+            ResponseEntity<QuoteDTO> quoteResponse = restTemplate.exchange(request, QuoteDTO.class);
             assertThat(quoteResponse.getStatusCode().series()).isEqualTo(HttpStatus.OK.series());
             QuoteDTO addedQuote = quoteResponse.getBody();
             existingQuotes.put(addedQuote.getId(), addedQuote);

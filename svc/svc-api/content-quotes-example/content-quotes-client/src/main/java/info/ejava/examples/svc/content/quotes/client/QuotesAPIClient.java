@@ -5,6 +5,7 @@ import info.ejava.examples.svc.content.quotes.dto.QuoteDTO;
 import info.ejava.examples.svc.content.quotes.dto.QuoteListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -38,17 +38,10 @@ public class ClientTestConfiguration {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         RestTemplate restTemplate = builder.requestFactory(
-                //used to read the streams twice -- so we can use the logging filter below
-                ()->new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
+                        //used to read the streams twice -- so we can use the logging filter below
+                        ()->new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
+                .interceptors(List.of(new RestTemplateLoggingFilter()))
                 .build();
-
-        List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
-        if (CollectionUtils.isEmpty(interceptors)) {
-            interceptors = new ArrayList<>();
-        }
-        interceptors.add(new RestTemplateLoggingFilter());
-        restTemplate.setInterceptors(interceptors);
-
         return restTemplate;
     }
 
