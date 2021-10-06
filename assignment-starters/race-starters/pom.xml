@@ -29,4 +29,10 @@
       <module>assignment2-race-api</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>ejava-nexus</id>
+            <url>https://pika.jhuep.com/nexus/repository/ejava-snapshots</url>
+        </repository>
+    </repositories>
 </project>
