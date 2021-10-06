@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-10-06: Published API Content Updates
 * 2021-09-29: Removed TODOs App example reference
 * 2021-09-29: Published Service/Web API materials
 * 2021-09-22: Extended Assignment 1 due date and reorganized API/Security schedule
@@ -33,14 +34,22 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 
 * week05: Service/Web API
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
-** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/rpc-greeter-example[RPC Greeter example]
-** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/httpapi-gestures-example[HTTP-API Gestures example]
-** begin link:coursedocs/content/html_single/assignment2-race-api-notes.html[API Assignment 2].
-Complete parts 2a (modules), 2c (resources), and 2d (web client/API interactions)
-** "Late pass" assignment 1 submissions due by Sun03, 6am. 1 Week late assignment 1 submissions due by Wed06, 6am
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/content-quotes-example[Content Quotes example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/swagger-contest-example[Swagger Contests example]
+** complete link:coursedocs/content/html_single/assignment2-race-api-notes.html[API Assignment 2].
+Complete parts 2b (content), 2e (service/controller), and 2f (test scenarios)
+** assignment 2 due by Sun17, 6am
 
 [id="completed"]
 === Things you should have completed!
+
+* week05: Service/Web API
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/rpc-greeter-example[RPC Greeter example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/httpapi-gestures-example[HTTP-API Gestures example]
+** begin link:coursedocs/content/html_single/assignment2-race-api-notes.html[API Assignment 2].
+Completed parts 2a (modules), 2c (resources), and 2d (web client/API interactions)
+** "Late pass" assignment 1 submissions due by Sun03, 6am. 1 Week late assignment 1 submissions due by Wed06, 6am
 
 * week04: Testing and HTTP-API
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
