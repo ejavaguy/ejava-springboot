@@ -3,10 +3,12 @@ package info.ejava.assignments.security.race.security;
 import info.ejava.assignments.api.race.client.races.RaceDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class AuthorizationHelper {
     public String getUsername() {
@@ -18,7 +20,7 @@ public class AuthorizationHelper {
         return (principal instanceof UserDetails) ? ((UserDetails) principal).getAuthorities().stream()
                         .anyMatch(a->a.getAuthority().equals(authority)) : false;
     }
-    public void isOwnerOrAuthority(java.util.function.Supplier<String> ownername, String authority) {
+    public void isOwnerOrAuthority(Supplier<String> ownername, String authority) {
         if (null==authority || !hasAuthority(authority)) {
             if (!StringUtils.equals(ownername.get(), getUsername())) {
                 throw new AccessDeniedException(
@@ -26,4 +28,16 @@ public class AuthorizationHelper {
             }
         }
     }
+
+    public void isOwnerOrRole(String ownername, Supplier<Boolean> hasRole) {
+        if (!StringUtils.equals(ownername, getUsername()) && (hasRole!=null && !hasRole.get())) {
+            throw new AccessDeniedException(
+                    String.format("%s is not race owner or have required role", getUsername()));
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public boolean isAdmin() { return true; }
+    @PreAuthorize("hasRole('MGR')")
+    public boolean isMgr() { return true; }
 }

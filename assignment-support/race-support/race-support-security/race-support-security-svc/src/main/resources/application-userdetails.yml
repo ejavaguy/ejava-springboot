@@ -1,0 +1,16 @@
+race:
+  accounts:
+  - username: professor
+    password: secret 
+  - username: skipper
+    password: secret
+  - username: gilligan
+    password: secret
+  - username: ginger
+    password: secret
+  - username: thurston
+    password: gold
+
+
+
+

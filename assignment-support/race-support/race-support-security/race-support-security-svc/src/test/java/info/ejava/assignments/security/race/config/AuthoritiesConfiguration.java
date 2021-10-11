@@ -1,11 +1,15 @@
 package info.ejava.assignments.security.race.config;
 
+import info.ejava.assignments.api.race.racers.RacersRepository;
+import info.ejava.assignments.api.race.racers.RacersService;
+import info.ejava.assignments.api.race.racers.RacersServiceImpl;
+import info.ejava.assignments.security.race.racers.AnnotatedSecureRacersServiceImpl;
+import info.ejava.assignments.security.race.racers.SecureRacersServiceImpl;
+import info.ejava.assignments.security.race.security.AuthorizationHelper;
 import info.ejava.assignments.security.race.security.RaceAccounts;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,6 +40,11 @@ public class AuthoritiesConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http.requestMatchers(m->m.antMatchers("/api/**"));
             http.authorizeRequests(cfg->cfg.antMatchers(HttpMethod.GET).permitAll());
+
+            //path-based authorizations
+            http.authorizeRequests(cfg-> cfg.antMatchers(HttpMethod.DELETE, "/api/races")
+                            .hasRole("ADMIN"));
+
             http.authorizeRequests(cfg->cfg.anyRequest().authenticated());
 
             http.httpBasic();
@@ -59,6 +68,14 @@ public class AuthoritiesConfiguration {
                     .collect(Collectors.toList());
             return new InMemoryUserDetailsManager(users);
         }
+    }
+
+    @Bean
+    @Primary
+    public RacersService annotatedSecureRacersService(RacersRepository racersRepository, AuthorizationHelper authzHelper) {
+        RacersService impl = new RacersServiceImpl(racersRepository);
+        SecureRacersServiceImpl secureImpl = new SecureRacersServiceImpl(impl, authzHelper);
+        return new AnnotatedSecureRacersServiceImpl(secureImpl);
     }
 
 }

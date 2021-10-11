@@ -11,24 +11,25 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
 
+/**
+ * This layered form of RacersService is demonstrating how annotations
+ * can be applied to methods to enforce some access. All work is delegated
+ * to the secure form of the service that assumes these constraints are
+ * in place and performs lower-level security work.
+ *
+ * Students integrating Racers into their application can use this class
+ * as an example, but must use the SecureRacersService instead and
+ * mimic the constraints of this class using path-based authorization constraints.
+ * This class is only being used for a local unit integration test.
+ */
 @RequiredArgsConstructor
 @Slf4j
-public class SecureRacersServiceImpl implements RacersService {
-    private final RacersService serviceImpl;
-    private final AuthorizationHelper authzHelper;
+public class AnnotatedSecureRacersServiceImpl implements RacersService {
+    private final SecureRacersServiceImpl serviceImpl;
 
     @Override
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public RacerDTO createRacer(RacerDTO newRacer) {
-        String username = authzHelper.getUsername();;
-        log.debug("{} called createRacer with {}", username, newRacer);
-
-        Optional<RacerDTO> existingRacer = serviceImpl.getRacerByUsername(username);
-        if (existingRacer.isPresent()) {
-            throw new ClientErrorException.InvalidInputException(
-                    "racer already exists for %s", authzHelper.getUsername());
-        }
-        newRacer.setUsername(authzHelper.getUsername());
         return serviceImpl.createRacer(newRacer);
     }
 
@@ -43,9 +44,8 @@ public class SecureRacersServiceImpl implements RacersService {
     }
 
     @Override
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public RacerDTO updateRacer(String id, RacerDTO racerUpdate) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRacer(id).getUsername(), null);
         return serviceImpl.updateRacer(id, racerUpdate);
     }
 
@@ -55,14 +55,13 @@ public class SecureRacersServiceImpl implements RacersService {
     }
 
     @Override
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public void deleteRacer(String id) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRacer(id).getUsername(), "ROLE_MGR");
         serviceImpl.deleteRacer(id);
     }
 
     @Override
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAllRacers() {
         serviceImpl.deleteAllRacers();
     }
