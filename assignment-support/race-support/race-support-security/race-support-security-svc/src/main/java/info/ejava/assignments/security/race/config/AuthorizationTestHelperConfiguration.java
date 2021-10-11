@@ -99,6 +99,11 @@ public class AuthorizationTestHelperConfiguration {
     public AccountProperties adminAccount(RaceAccounts accounts) {
         return findUserWithAuthority(accounts, "ROLE_ADMIN");
     }
+    @Bean
+    @Profile("authorities")
+    public AccountProperties proxyAccount(RaceAccounts accounts) {
+        return findUserWithAuthority(accounts, "PROXY");
+    }
 
     @Bean
     public RestTemplate anonymousUser(RestTemplateBuilder builder) {
@@ -125,5 +130,11 @@ public class AuthorizationTestHelperConfiguration {
     public RestTemplate adminUser(@Qualifier("userMap") Map<String, RestTemplate> authnUsers,
                                   AccountProperties adminAccount) {
         return authnUsers.get(adminAccount.getUsername());
+    }
+    @Bean
+    @Profile("authorities")
+    public RestTemplate proxyUser(@Qualifier("userMap") Map<String, RestTemplate> authnUsers,
+                                  AccountProperties proxyAccount) {
+        return authnUsers.get(proxyAccount.getUsername());
     }
 }

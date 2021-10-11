@@ -20,7 +20,11 @@ public class AuthorizationHelper {
         return (principal instanceof UserDetails) ? ((UserDetails) principal).getAuthorities().stream()
                         .anyMatch(a->a.getAuthority().equals(authority)) : false;
     }
-    public void isOwnerOrAuthority(Supplier<String> ownername, String authority) {
+    public boolean isUsername(String username) {
+        return StringUtils.equals(username, getUsername());
+    }
+
+    public void assertAuthorityOrOwner(String authority, Supplier<String> ownername) {
         if (null==authority || !hasAuthority(authority)) {
             if (!StringUtils.equals(ownername.get(), getUsername())) {
                 throw new AccessDeniedException(
@@ -29,15 +33,15 @@ public class AuthorizationHelper {
         }
     }
 
-    public void isOwnerOrRole(String ownername, Supplier<Boolean> hasRole) {
-        if (!StringUtils.equals(ownername, getUsername()) && (hasRole!=null && !hasRole.get())) {
+    public void assertOwnerOrRole(String ownername, Supplier<Boolean> hasRole) {
+        if (!(StringUtils.equals(ownername, getUsername()) || (hasRole!=null && hasRole.get()))) {
             throw new AccessDeniedException(
                     String.format("%s is not race owner or have required role", getUsername()));
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public boolean isAdmin() { return true; }
+    public boolean assertAdmin() { return true; }
     @PreAuthorize("hasRole('MGR')")
-    public boolean isMgr() { return true; }
+    public boolean assertMgr() { return true; }
 }

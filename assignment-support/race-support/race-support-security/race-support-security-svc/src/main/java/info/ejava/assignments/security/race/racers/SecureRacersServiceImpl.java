@@ -7,7 +7,6 @@ import info.ejava.assignments.security.race.security.AuthorizationHelper;
 import info.ejava.examples.common.exceptions.ClientErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
 
@@ -45,7 +44,7 @@ public class SecureRacersServiceImpl implements RacersService {
     @Override
     //@PreAuthorize("isAuthenticated()")
     public RacerDTO updateRacer(String id, RacerDTO racerUpdate) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRacer(id).getUsername(), null);
+        authzHelper.assertAuthorityOrOwner(null, ()->serviceImpl.getRacer(id).getUsername());
         return serviceImpl.updateRacer(id, racerUpdate);
     }
 
@@ -57,7 +56,7 @@ public class SecureRacersServiceImpl implements RacersService {
     @Override
     //@PreAuthorize("isAuthenticated()")
     public void deleteRacer(String id) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRacer(id).getUsername(), "ROLE_MGR");
+        authzHelper.assertAuthorityOrOwner("ROLE_MGR", ()->serviceImpl.getRacer(id).getUsername());
         serviceImpl.deleteRacer(id);
     }
 

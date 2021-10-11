@@ -6,7 +6,6 @@ import info.ejava.assignments.api.race.races.RacesService;
 import info.ejava.assignments.security.race.security.AuthorizationHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,13 +29,13 @@ public class SecureRacesServiceImpl implements RacesService {
 
     @Override
     public RaceDTO updateRace(String id, RaceDTO updateRace) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRace(id).getOwnername(), null);
+        authzHelper.assertAuthorityOrOwner(null, ()->serviceImpl.getRace(id).getOwnername());
         return serviceImpl.updateRace(id, updateRace);
     }
 
     @Override
     public RaceDTO cancelRace(String id) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRace(id).getOwnername(), null);
+        authzHelper.assertAuthorityOrOwner(null, ()->serviceImpl.getRace(id).getOwnername());
         return serviceImpl.cancelRace(id);
     }
 
@@ -47,7 +46,7 @@ public class SecureRacesServiceImpl implements RacesService {
 
     @Override
     public void deleteRace(String id) {
-        authzHelper.isOwnerOrAuthority(()->serviceImpl.getRace(id).getOwnername(), "ROLE_MGR");
+        authzHelper.assertAuthorityOrOwner("ROLE_MGR", ()->serviceImpl.getRace(id).getOwnername());
         serviceImpl.deleteRace(id);
     }
 
