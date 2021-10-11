@@ -21,8 +21,8 @@
 
     <modules>
         <module>svc-api</module>
-        <!--
         <module>svc-security</module>
+        <!--
         <module>svc-aop</module>
         <module>svc-container</module>
         -->

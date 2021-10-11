@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-10-13: Published Security Updates
 * 2021-10-06: Published API Content Updates
 * 2021-09-29: Removed TODOs App example reference
 * 2021-09-29: Published Service/Web API materials
@@ -32,7 +33,36 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id="todo"]
 === Class To Do
 
-* week05: Service/Web API
+////
+* week09: AOP and Method Proxies
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-aop/aop-items-example[AOP Items example]
+** complete link:coursedocs/content/html_single/assignment3-race-security-notes.html[API Assignment 3].
+** assignment 3 due by Nov07, 6am
+
+* week08: Security User Details and Authorization
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authn-users-example[UserDetails example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authz-authorities-example[Authz example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/https-hello-example[HTTPS example]
+** work on link:coursedocs/content/html_single/assignment3-race-security-notes.html[API Assignment 3].
+** assignment 3 due by Nov07, 6am
+////
+
+* week07: Security and Authentication
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/noauthn-security-example[NoAuth Security example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authn-config-example[Authn Config example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authn-users-example[UserDetails example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authz-authorities-example[Authz example]
+** begin link:coursedocs/content/html_single/assignment3-race-security-notes.html[API Assignment 3].
+** assignment 2 due by Sun17, 6am
+** assignment 3 due by Nov07, 6am
+
+[id="completed"]
+=== Things you should have completed!
+
+* week06: Service/Web API
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/content-quotes-example[Content Quotes example]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-api/swagger-contest-example[Swagger Contests example]
@@ -40,8 +70,6 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 Complete parts 2b (content), 2e (service/controller), and 2f (test scenarios)
 ** assignment 2 due by Sun17, 6am
 
-[id="completed"]
-=== Things you should have completed!
 
 * week05: Service/Web API
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
