@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Configuration
-@Profile("authorities")
+@Profile({"userdetails","authorities"})
 @Slf4j
 public class AuthorizationTestHelperConfiguration {
     @Bean
@@ -58,16 +58,6 @@ public class AuthorizationTestHelperConfiguration {
     }
 
 
-    @Bean
-    public AccountProperties mgrAccount(RaceAccounts accounts) {
-        return findUserWithAuthority(accounts, "ROLE_MGR");
-    }
-
-    @Bean
-    public AccountProperties adminAccount(RaceAccounts accounts) {
-        return findUserWithAuthority(accounts, "ROLE_ADMIN");
-    }
-
     private AccountProperties findUserWithAuthority(RaceAccounts accounts, String authority) {
         if (accounts.getAccounts().size()>=1) {
             AccountProperties account = accounts.getAccounts().stream()
@@ -81,6 +71,11 @@ public class AuthorizationTestHelperConfiguration {
         }
     }
 
+    /**
+     * @param builder
+     * @param accounts
+     * @return Map of all user-configured RestRemplate clients -- keyed by username.
+     */
     @Bean
     @Qualifier("userMap")
     public Map<String, RestTemplate> authnUsers(RestTemplateBuilder builder, RaceAccounts accounts) {
@@ -91,6 +86,18 @@ public class AuthorizationTestHelperConfiguration {
             authnUsers.put(account.getUsername(), new RestTemplateConfig().restTemplateDebug(builder, authn));
         }
         return authnUsers;
+    }
+
+    @Bean
+    @Profile("authorities")
+    public AccountProperties mgrAccount(RaceAccounts accounts) {
+        return findUserWithAuthority(accounts, "ROLE_MGR");
+    }
+
+    @Bean
+    @Profile("authorities")
+    public AccountProperties adminAccount(RaceAccounts accounts) {
+        return findUserWithAuthority(accounts, "ROLE_ADMIN");
     }
 
     @Bean
@@ -108,11 +115,13 @@ public class AuthorizationTestHelperConfiguration {
         return authnUsers.get(altAccount.getUsername());
     }
     @Bean
+    @Profile("authorities")
     public RestTemplate mgrUser(@Qualifier("userMap") Map<String, RestTemplate> authnUsers,
                                   AccountProperties mgrAccount) {
         return authnUsers.get(mgrAccount.getUsername());
     }
     @Bean
+    @Profile("authorities")
     public RestTemplate adminUser(@Qualifier("userMap") Map<String, RestTemplate> authnUsers,
                                   AccountProperties adminAccount) {
         return authnUsers.get(adminAccount.getUsername());
