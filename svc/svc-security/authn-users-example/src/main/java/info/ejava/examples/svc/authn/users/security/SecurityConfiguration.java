@@ -126,7 +126,7 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService sharedUserDetailsService(PasswordEncoder encoder) {
         User.UserBuilder builder = User.builder().passwordEncoder(encoder::encode);
-        List<UserDetails> users = Arrays.asList(
+        List<UserDetails> users = List.of(
             builder.username("user1").password("password2").roles().build(),
             builder.username("user3").password("password2").roles().build()
         );
