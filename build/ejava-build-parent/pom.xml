@@ -378,14 +378,12 @@
                             <artifactId>spring-boot-maven-plugin</artifactId>
                             <version>${springboot.version}</version>
                             <executions>
-                            <!--
                                 <execution>
                                     <id>package</id>
                                     <goals>
                                         <goal>repackage</goal>
                                     </goals>
                                 </execution>
-                                -->
                                 <execution>
                                     <id>pre-integration-test</id>
                                     <goals>
