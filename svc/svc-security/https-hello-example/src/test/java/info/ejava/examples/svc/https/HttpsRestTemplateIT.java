@@ -20,23 +20,19 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest(classes={ClientTestConfiguration.class},
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        webEnvironment = SpringBootTest.WebEnvironment.NONE,
         properties = "test=true")
 @ActiveProfiles({"its"})
 @Slf4j
 public class HttpsRestTemplateIT {
     @Autowired
-    private ServerConfig serverConfig;
-    @Autowired
     private RestTemplate authnUser;
-
+    @Autowired
     private URI authnUrl;
 
     @BeforeEach
     public void setUp() {
-        URI baseUrl = serverConfig.getBaseUrl();
-        log.info("baseUrl={}", baseUrl);
-        authnUrl = UriComponentsBuilder.fromUri(baseUrl).path("/api/authn/hello").build().toUri();
+        log.info("baseUrl={}", authnUrl);
     }
 
     @Test
