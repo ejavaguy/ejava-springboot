@@ -30,6 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableGlobalMethodSecurity(
@@ -53,7 +54,6 @@ public class SecurityConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.requestMatchers(m->m.antMatchers("/api/**"));
             http.httpBasic(cfg->cfg.realmName("AuthzExample"));
             http.formLogin(cfg->cfg.disable());
             http.headers(cfg->{
@@ -74,7 +74,7 @@ public class SecurityConfiguration {
                     .hasRole("ADMIN"));
             http.authorizeRequests(cfg->cfg.antMatchers(
                     "/api/authorities/paths/clerk/**")
-                    .hasAnyRole("ADMIN", "CLERK"));
+                    .hasAnyRole("ADMIN", "CLERK")); //explicit ADMIN not needed with inheritance
             http.authorizeRequests(cfg->cfg.antMatchers(
                     "/api/authorities/paths/customer/**")
                     .hasAnyRole("CUSTOMER"));
@@ -157,18 +157,20 @@ public class SecurityConfiguration {
 
     @Bean
     public AccessDecisionManager accessDecisionManager() {
-        return new UnanimousBased(Arrays.asList(
+        return new UnanimousBased(List.of(
                 new WebExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter()));
     }
 
-    @Bean
+    //needed mid-way thru lecture
+    //@Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy(StringUtils.join(Arrays.asList(
+        roleHierarchy.setHierarchy(StringUtils.join(List.of(
                 "ROLE_ADMIN > ROLE_CLERK",
-                "ROLE_CLERK > ROLE_CUSTOMER"),System.lineSeparator()));
+                "ROLE_CLERK > ROLE_CUSTOMER"
+        ),System.lineSeparator()));
         return roleHierarchy;
     }
 }

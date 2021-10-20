@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionAdvice extends info.ejava.examples.common.web.BaseExceptionAdvice {
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<MessageDTO> handle(AccessDeniedException ex) {
