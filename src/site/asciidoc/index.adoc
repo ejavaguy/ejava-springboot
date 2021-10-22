@@ -58,8 +58,6 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/noauthn-security-example[NoAuth Security example]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authn-config-example[Authn Config example]
-** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authn-users-example[UserDetails example]
-** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-security/authz-authorities-example[Authz example]
 ** begin link:coursedocs/content/html_single/assignment3-race-security-notes.html[API Assignment 3].
 ** assignment 2 due by Sun17, 6am
 ** assignment 3 due by Nov07, 6am
