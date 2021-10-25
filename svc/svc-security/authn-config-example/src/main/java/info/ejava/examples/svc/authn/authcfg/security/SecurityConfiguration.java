@@ -26,6 +26,7 @@ public class SecurityConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+            http.requestMatchers(m->m.antMatchers("/api/anonymous/**","/api/authn/**"));
             http.authorizeRequests(cfg->cfg.antMatchers("/api/anonymous/**").permitAll());
             http.authorizeRequests(cfg->cfg.anyRequest().authenticated());
 
