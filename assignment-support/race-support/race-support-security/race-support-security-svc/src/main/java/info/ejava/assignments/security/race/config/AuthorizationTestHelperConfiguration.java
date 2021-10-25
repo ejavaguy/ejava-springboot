@@ -64,7 +64,7 @@ public class AuthorizationTestHelperConfiguration {
                     .filter(a->a.getAuthorities().contains(authority))
                     .findFirst()
                     .orElseThrow(()->new IllegalStateException("cannot find user authority " + authority));
-            log.info("using account({}) for %s authority", account, authority);
+            log.info("using account({}) for {} authority", account, authority);
             return account;
         } else {
             throw new IllegalStateException("no user.name/password or accounts specified");
