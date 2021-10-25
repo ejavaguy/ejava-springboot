@@ -59,8 +59,9 @@ public class HelloController {
     @RequestMapping(path="/api/alt/hello",
             method= RequestMethod.GET)
     public String getHelloAlt(@RequestParam String name) {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return "hello, " + name + " :caller=" + user.getUsername();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = principal instanceof UserDetails ? ((UserDetails)principal).getUsername() : principal.toString();
+        return "hello, " + name + " :caller=" + username;
     }
 
     @Operation(description = "sample authenticated alt POST", security = @SecurityRequirement(name="basicAuth"))
@@ -69,7 +70,8 @@ public class HelloController {
             consumes = MediaType.TEXT_PLAIN_VALUE,
             produces = MediaType.TEXT_PLAIN_VALUE)
     public String postHelloAlt(@RequestBody String name) {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return "hello, " + name + " :caller=" + user.getUsername();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = principal instanceof UserDetails ? ((UserDetails)principal).getUsername() : principal.toString();
+        return "hello, " + name + " :caller=" + username;
     }
 }
