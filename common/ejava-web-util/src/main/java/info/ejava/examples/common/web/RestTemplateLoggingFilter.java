@@ -26,7 +26,7 @@ public class RestTemplateLoggingFilter implements ClientHttpRequestInterceptor {
             URI uri = request.getURI();
             HttpStatus status = response.getStatusCode();
             String requestBody = new String(body);
-            String responseBody = readString(response.getBody());
+            String responseBody = getResponseBody(response);
 
             //https://stackoverflow.com/q/1883345
             String message = String.format("%n%s %s, returned %s/%s%nsent: %s%n%s%nrcvd: %s%n%s",
@@ -37,6 +37,15 @@ public class RestTemplateLoggingFilter implements ClientHttpRequestInterceptor {
         }
 
         return response;
+    }
+
+    protected String getResponseBody(ClientHttpResponse response) {
+        try {
+            return readString(response.getBody());
+        } catch (Exception ex){
+            //may fail if having trouble reading stream
+            return "";
+        }
     }
 
     /**
