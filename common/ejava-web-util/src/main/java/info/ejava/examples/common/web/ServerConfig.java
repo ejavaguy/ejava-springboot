@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,7 @@ import java.net.URI;
 @With
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class ServerConfig {
     private String scheme;
     private String host;
@@ -31,13 +33,13 @@ public class ServerConfig {
             scheme = scheme == null ? "http" : scheme.toLowerCase();
             host = host == null ? "localhost" : host;
             if (port == 0) {
-                port = scheme.equals("http") ? 8080 : 8787;
+                port = scheme.equals("http") ? 8080 : 8443;
             }
             baseUrl = UriComponentsBuilder.newInstance()
                     .scheme(scheme)
                     .host(host)
                     .port(port)
-                    .build((Object) null);
+                    .build().toUri();
         }
         scheme = baseUrl.getScheme();
         host = baseUrl.getHost();
