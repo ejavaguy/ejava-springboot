@@ -1,6 +1,5 @@
 package info.ejava.examples.svc.docker.hello;
 
-import info.ejava.examples.common.web.RestTemplateConfig;
 import info.ejava.examples.common.web.RestTemplateLoggingFilter;
 import info.ejava.examples.common.web.ServerConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -14,18 +13,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
 import java.net.URI;
-import java.net.URL;
-import java.util.List;
 
 /**
  * A test configuration used by remote IT test clients.
@@ -46,10 +41,10 @@ public class ClientTestConfiguration {
         return new ServerConfig();
     }
 
+    //use for IT tests
     @Bean
     public URI baseUrl(ServerConfig serverConfig) {
         URI baseUrl = serverConfig.build().getBaseUrl();
-        log.info("baseUrl={}", baseUrl);
         return baseUrl;
     }
 
