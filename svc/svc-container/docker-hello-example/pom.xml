@@ -19,6 +19,7 @@
         <layered>false</layered>
         <!-- not using build-helper dynamic port#, hardcode for failsafe to use -->
         <server.http.port>443</server.http.port>
+        <skipITs>true</skipITs>
     </properties>
 
     <dependencies>
@@ -120,5 +121,34 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>heroku-it-deploy</id>
+            <activation>
+                <property>
+                    <name>skipITs</name>
+                    <value>false</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.heroku.sdk</groupId>
+                        <artifactId>heroku-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deploy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
