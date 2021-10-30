@@ -24,6 +24,7 @@
         <fongo.version>2.1.0</fongo.version>
         <groovy.version>3.0.8</groovy.version>
         <hamcrest-date.version>2.0.7</hamcrest-date.version>
+        <httpclient.version>4.5.2</httpclient.version>
         <jakarta.json-api.version>1.1.6</jakarta.json-api.version>
         <jakarta.json.bind-api.version>1.0.2</jakarta.json.bind-api.version>
         <javafaker.version>1.0.2</javafaker.version>
@@ -184,6 +185,13 @@
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
+            </dependency>
+
+            <!--needed for SSL -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
             </dependency>
 
          </dependencies>
