@@ -20,6 +20,8 @@
         <!-- not using build-helper dynamic port#, hardcode for failsafe to use -->
         <server.http.port>443</server.http.port>
         <skipITs>true</skipITs>
+
+        <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
     </properties>
 
     <dependencies>
@@ -94,21 +96,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!--
                     <excludeDevtools>false</excludeDevtools>
+                    -->
                     <layers>
                         <enabled>${layered}</enabled>
                     </layers>
                 </configuration>
-                <!--
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                -->
             </plugin>
 
             <plugin>
@@ -131,6 +125,9 @@
                     <value>false</value>
                 </property>
             </activation>
+            <properties>
+                <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
