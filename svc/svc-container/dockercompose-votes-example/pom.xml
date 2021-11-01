@@ -24,17 +24,30 @@
     </modules>
     <profiles>
         <profile>
-            <id>docker</id>
+            <id>docker-check</id>
             <activation>
               <file>
                 <exists>/var/run/docker.sock</exists>
               </file>
+            </activation>
+            <properties>
+                <docker.skip>false</docker.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <activation>
+              <property>
+                <name>docker.skip</name>
+                <value>false</value>
+              </property>
             </activation>
             <modules>
                 <module>dockercompose-votes-it</module>
                 <module>testcontainers-votes-ntest</module>
             </modules>
         </profile>
+
         <profile>
             <id>spock-modules</id>
             <modules>
@@ -47,6 +60,7 @@
                 <module>testcontainers-votes-spock-ntest</module>
             </modules>
         </profile>
+
     </profiles>
 
 </project>
