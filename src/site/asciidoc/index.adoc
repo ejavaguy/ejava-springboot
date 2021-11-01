@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-11-03: Published Deployment and Container notes and assignment 4
 * 2021-10-25: Published AOP notes and AOP portion of assignment 3
 * 2021-10-20: Published more Security and assignment updates
 * 2021-10-13: Published Security updates
@@ -35,15 +36,22 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id="todo"]
 === Class To Do
 
+* week10: Containers and Deployments
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-container/docker-hello-example[Heroku/Docker Hello example]
+** begin link:coursedocs/content/html_single/assignment4-race-deployments-notes.html[API Assignment 4].
+** assignment 3 due by Nov07, 6am
+** assignment 4 due by Nov21, 6am
+
+
+[id="completed"]
+=== Things you should have completed!
+
 * week09: AOP and Method Proxies
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-aop/aop-items-example[AOP Items example]
 ** complete link:coursedocs/content/html_single/assignment3-race-security-notes.html[API Assignment 3].
 ** assignment 3 due by Nov07, 6am
-
-
-[id="completed"]
-=== Things you should have completed!
 
 * week08: Security User Details and Authorization
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
