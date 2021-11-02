@@ -47,7 +47,7 @@ import java.security.cert.CertificateException;
 @EnableAutoConfiguration       //needed to setup logging
 @Slf4j
 public class ClientTestConfiguration {
-    @Value("${spring.security.user.user}")
+    @Value("${spring.security.user.name}")
     private String username;
     @Value("${spring.security.user.password}")
     private String password;
