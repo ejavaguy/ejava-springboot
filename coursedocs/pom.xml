@@ -487,12 +487,11 @@
             </build>
         </profile>
 
-
         <profile>
-            <id>db</id>
+            <id>deployments</id>
             <activation>
                 <property>
-                    <name>all-docs</name>
+                    <name>!deployments</name>
                 </property>
             </activation>
             <dependencies>
@@ -524,6 +523,34 @@
                   <type>war</type>
                   <scope>runtime</scope>
               </dependency>
+
+              <dependency>
+                  <groupId>info.ejava.docs.assignments</groupId>
+                  <artifactId>assignment4-race-deployments-notes</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <scope>runtime</scope>
+              </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                  <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                  </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+        <profile>
+            <id>db</id>
+            <activation>
+                <property>
+                    <name>all-docs</name>
+                </property>
+            </activation>
+            <dependencies>
 
               <dependency>
                   <groupId>info.ejava.docs.db.jpa</groupId>
@@ -599,13 +626,6 @@
                   <scope>runtime</scope>
               </dependency>
 
-              <dependency>
-                  <groupId>info.ejava.docs.assignments</groupId>
-                  <artifactId>assignment4-race-deployments-notes</artifactId>
-                  <version>${project.version}</version>
-                  <type>war</type>
-                  <scope>runtime</scope>
-              </dependency>
               <dependency>
                   <groupId>info.ejava.docs.assignments</groupId>
                   <artifactId>assignment5-race-db-notes</artifactId>
