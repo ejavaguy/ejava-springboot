@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -21,16 +22,17 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
 import java.net.URI;
+import java.net.URL;
 
 /**
  * A test configuration used by remote IT test clients.
  */
-@SpringBootConfiguration()
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties //used to set it.server properties
-@EnableAutoConfiguration       //needed to setup logging
+@EnableAutoConfiguration
 @Slf4j
 public class ClientTestConfiguration {
-    @Value("${spring.security.user.user}")
+    @Value("${spring.security.user.name}")
     private String username;
     @Value("${spring.security.user.password}")
     private String password;
@@ -88,9 +90,20 @@ public class ClientTestConfiguration {
     @Bean
     public SSLContext sslContext(ServerConfig serverConfig)  {
         try {
-            return SSLContextBuilder.create()
-                    .setProtocol("TLSv1.2")
-                    .build();
+            URL trustStoreUrl = null;
+            if (serverConfig.getTrustStore()!=null) {
+                trustStoreUrl = Thread.currentThread()
+                        .getContextClassLoader().getResource("/" + serverConfig.getTrustStore());
+                if (null==trustStoreUrl) {
+                    throw new IllegalStateException("unable to locate truststore:/" + serverConfig.getTrustStore());
+                }
+            }
+            SSLContextBuilder builder = SSLContextBuilder.create()
+                    .setProtocol("TLSv1.2");
+            if (trustStoreUrl!=null) {
+                builder.loadTrustMaterial(trustStoreUrl, serverConfig.getTrustStorePassword());
+            }
+            return builder.build();
         } catch (Exception ex) {
             throw new IllegalStateException("unable to establish SSL context", ex);
         }

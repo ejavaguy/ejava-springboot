@@ -30,6 +30,7 @@ public class DockerHelloExampleApp {
 	}
 
 	@Configuration
+	@Order(0)
 	public class APISecurity extends WebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {

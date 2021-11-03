@@ -18,7 +18,9 @@
     <properties>
         <layered>false</layered>
         <!-- not using build-helper dynamic port#, hardcode for failsafe to use -->
+        <heroku.appName>ejava-boot</heroku.appName>
         <server.http.port>443</server.http.port>
+        <!--don't eagerly run IT test, make builder ask for it since it externally deploys to Heroku -->
         <skipITs>true</skipITs>
 
         <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
@@ -74,7 +76,7 @@
     </dependencies>
 
     <build>
-        <testResources>
+        <testResources> <!-- used to replace ${variables} in property files -->
             <testResource>
                 <directory>src/test/resources</directory>
                 <includes> <!-- replace ${heroku.appName} -->
@@ -92,11 +94,11 @@
         </testResources>
 
         <plugins>
-            <plugin>
+            <plugin> <!-- builds a Spring Boot Executable JAR - potentially with layering -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--
+                    <!-- used for remote debugging
                     <excludeDevtools>false</excludeDevtools>
                     -->
                     <layers>
@@ -117,7 +119,7 @@
     </build>
 
     <profiles>
-        <profile>
+        <profile> <!-- deploys a Spring Boot Executable JAR -->
             <id>heroku-it-deploy</id>
             <activation>
                 <property>

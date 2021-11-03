@@ -31,12 +31,10 @@ public class HelloHerokuIT {
     private RestTemplate authnUser;
     @Autowired
     private String authnUsername;
-    @Autowired
-    private URI baseUrl;
     private UriComponentsBuilder helloUrl;
 
     @BeforeEach
-    void init() {
+    void init(@Autowired URI baseUrl) {
         log.info("baseUrl={}", baseUrl);
         helloUrl = UriComponentsBuilder.fromUri(baseUrl).path("api/hello")
                 .queryParam("name","{name}");
