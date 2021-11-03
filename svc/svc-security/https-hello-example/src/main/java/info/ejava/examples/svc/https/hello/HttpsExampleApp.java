@@ -11,6 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 import javax.servlet.Filter;
 
@@ -25,6 +30,24 @@ public class HttpsExampleApp {
 	public Filter logFilter() {
 		return WebLoggingFilter.logFilter();
 	}
+
+	@Configuration
+	@Order(0)
+	public class APISecurity extends WebSecurityConfigurerAdapter {
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http.requestMatchers(cfg->cfg.antMatchers("/api/anonymous/**", "/api/authn/**"));
+			http.authorizeRequests(cfg->cfg.antMatchers("/api/authn/**").authenticated());
+			http.authorizeRequests(cfg->cfg.anyRequest().permitAll());
+
+			http.httpBasic();
+			http.csrf().disable();
+			http.sessionManagement(cfg->cfg.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		}
+	}
+	@Configuration
+	@Order(100)
+	public class AltSecurity extends WebSecurityConfigurerAdapter {}
 
 	/**
 	 * The following set of re-direct snippets are from

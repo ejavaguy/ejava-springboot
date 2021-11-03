@@ -70,24 +70,30 @@ public class ClientTestConfiguration {
     https://medium.com/@itzgeoff/using-a-custom-trust-store-with-resttemplate-in-spring-boot-77b18f6a5c39
      */
     @Bean
-    public ClientHttpRequestFactory httpsRequestFactory(SSLContext sslContext) {
+    public ClientHttpRequestFactory httpsRequestFactory(SSLContext sslContext,
+            ServerConfig serverConfig) {
         HttpClient httpsClient = HttpClientBuilder.create()
-                .setSSLContext(sslContext)
+                .setSSLContext(serverConfig.isHttps() ? sslContext : null)
                 .build();
         return new HttpComponentsClientHttpRequestFactory(httpsClient);
     }
 
     @Bean
     public SSLContext sslContext(ServerConfig serverConfig)  {
-        URL trustStoreUrl = HttpsExampleApp.class.getResource("/" + serverConfig.getTrustStore());
-        if (null==trustStoreUrl) {
-            throw new IllegalStateException("unable to locate truststore:/" + serverConfig.getTrustStore());
-        }
         try {
-            return SSLContextBuilder.create()
-                    .loadTrustMaterial(trustStoreUrl, serverConfig.getTrustStorePassword())
-                    .setProtocol("TLSv1.2")
-                    .build();
+            URL trustStoreUrl = null;
+            if (serverConfig.getTrustStore()!=null) {
+                trustStoreUrl = HttpsExampleApp.class.getResource("/" + serverConfig.getTrustStore());
+                if (null==trustStoreUrl) {
+                    throw new IllegalStateException("unable to locate truststore:/" + serverConfig.getTrustStore());
+                }
+            }
+            SSLContextBuilder builder = SSLContextBuilder.create()
+                    .setProtocol("TLSv1.2");
+            if (trustStoreUrl!=null) {
+                builder.loadTrustMaterial(trustStoreUrl, serverConfig.getTrustStorePassword());
+            }
+            return builder.build();
         } catch (Exception ex) {
             throw new IllegalStateException("unable to establish SSL context", ex);
         }
@@ -99,14 +105,10 @@ public class ClientTestConfiguration {
                                   ClientHttpRequestFactory requestFactory) {
         RestTemplate restTemplate = builder.requestFactory(
                 //used to read the streams twice -- so we can use the logging filter below
-                ()->new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
+                ()->new BufferingClientHttpRequestFactory(requestFactory))
                 .interceptors(new BasicAuthenticationInterceptor(username, password),
                         new RestTemplateLoggingFilter())
                 .build();
-        if (serverConfig.isHttps()) {
-            log.info("enabling SSL requests");
-            restTemplate.setRequestFactory(requestFactory);
-        }
         return restTemplate;
     }
 }
