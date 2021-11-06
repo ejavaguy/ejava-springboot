@@ -46,15 +46,16 @@ public class SongsController {
     @RequestMapping(path=SONGS_PATH,
             method= RequestMethod.GET,
             produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Page<SongDTO>> getSongs(
+    public ResponseEntity<SongsPageDTO> getSongs(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
             @RequestParam(value = "sort", required = false) String sortString
             ) {
         Pageable pageable = PageableDTO.of(pageNumber, pageSize, sortString).toPageable();
         Page<SongDTO> result = songsService.getSongs(pageable);
+        SongsPageDTO resultDTO = new SongsPageDTO(result);
 
-        ResponseEntity<Page<SongDTO>> response = ResponseEntity.ok(result);
+        ResponseEntity<SongsPageDTO> response = ResponseEntity.ok(resultDTO);
         return response;
     }
 
