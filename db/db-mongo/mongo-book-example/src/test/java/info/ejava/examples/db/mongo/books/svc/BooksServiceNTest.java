@@ -32,7 +32,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 @Tag("springboottest")
 @Slf4j
 @DisplayName("Songs Service NTest")
-public class SongsServiceNTest {
+public class BooksServiceNTest {
     @Autowired
     private BooksRepository songsRepository;
     @Autowired
@@ -90,7 +90,7 @@ public class SongsServiceNTest {
         NotFoundException ex = catchThrowableOfType(() -> songsService.getBook(doesNotExist),
                 NotFoundException.class);
         //then
-        log.info("{}", ex);
+        log.info("{}", ex.toString());
         then(ex).hasMessage("Book id[%s] not found", doesNotExist);
     }
 
