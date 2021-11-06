@@ -112,8 +112,8 @@ class SongsCrudRepositoryMethodsNTest {
         //where song0_.id=?
 
         //then
-        then(result).isNotNull();
         then(result).isPresent();
+        then(result.isPresent()).isTrue();
 
         //when - obtaining the instance
         Song dbSong = result.get();
@@ -204,6 +204,7 @@ class SongsCrudRepositoryMethodsNTest {
         //when - deleting a non-existing instance
         songsRepo.delete(doesNotExist);
         //select ... as title4_0_0_ from reposongs_song song0_ where song0_.id=?
+        //no exception was thrown
     }
 
     @Test
@@ -225,12 +226,12 @@ class SongsCrudRepositoryMethodsNTest {
         //given - an ID that does not exist
         int missingId = 123456;
 
-        //when - deleting an non-existant instance
+        //when - deleting a non-existant instance
         Throwable ex= catchThrowable(()->{
             songsRepo.deleteById(missingId);
         });
 
-        //then - no exception was ever thrown
+        //then -- exception is thrown
         then(ex).isInstanceOf(EmptyResultDataAccessException.class);
         log.info("{}", ex.toString());
     }

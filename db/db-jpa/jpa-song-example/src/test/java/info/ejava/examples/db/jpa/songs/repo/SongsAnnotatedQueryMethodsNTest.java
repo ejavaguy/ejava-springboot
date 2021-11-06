@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +39,8 @@ public class SongsAnnotatedQueryMethodsNTest {
     private SongDTOFactory dtoFactory;
     @Autowired
     private SongsMapper mapper;
+    @Autowired
+    private EntityManager entityManager;
 
     private List<Song> savedSongs = new ArrayList<>();
 
@@ -109,7 +114,16 @@ public class SongsAnnotatedQueryMethodsNTest {
                 .map(s->s.getId())
                 .collect(Collectors.toSet());
 
-        //when
+        //when - using JPA
+        TypedQuery<Song> query = entityManager
+                .createNamedQuery("Song.findByArtistGESize", Song.class)
+                .setParameter("length", minLength);
+        List<Song> jpaFoundSongs = query.getResultList();
+        //then
+        Set<Integer> foundIds = jpaFoundSongs.stream().map(s->s.getId()).collect(Collectors.toSet());
+        then(foundIds).isEqualTo(ids);
+
+        //when - using Spring Data
         List<Song> foundSongs = songsRepository.findByArtistGESize(minLength);
         //select ...
         // from reposongs_song song0_
@@ -117,7 +131,7 @@ public class SongsAnnotatedQueryMethodsNTest {
         log.info("title size GE '{}' found {}", minLength, foundSongs);
 
         //then
-        Set<Integer> foundIds = foundSongs.stream().map(s->s.getId()).collect(Collectors.toSet());
+        foundIds = foundSongs.stream().map(s->s.getId()).collect(Collectors.toSet());
         then(foundIds).isEqualTo(ids);
     }
 }
