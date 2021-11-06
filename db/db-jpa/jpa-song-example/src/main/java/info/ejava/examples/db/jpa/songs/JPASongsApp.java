@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -31,6 +32,7 @@ public class JPASongsApp {
     }
 
     @Component
+    @ConditionalOnProperty(prefix = "db", name = "populate", havingValue = "true", matchIfMissing = true)
     public class Init implements CommandLineRunner {
         @Autowired
         private SongsRepository songsRepo;
