@@ -31,8 +31,8 @@
         <module>svc</module>
         <module>assignment-starters</module>
         <module>assignment-support</module>
-        <!--
         <module>db</module>
+        <!--
         <module>async</module>
         -->
     </modules>

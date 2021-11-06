@@ -491,7 +491,7 @@
             <id>deployments</id>
             <activation>
                 <property>
-                    <name>!deployments</name>
+                    <name>!no-deployments</name>
                 </property>
             </activation>
             <dependencies>
@@ -547,7 +547,7 @@
             <id>db</id>
             <activation>
                 <property>
-                    <name>all-docs</name>
+                    <name>!no-db</name>
                 </property>
             </activation>
             <dependencies>
