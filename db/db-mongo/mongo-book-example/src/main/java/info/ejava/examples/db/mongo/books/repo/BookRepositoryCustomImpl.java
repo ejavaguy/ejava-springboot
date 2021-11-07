@@ -24,21 +24,21 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     @Autowired @Lazy
     private BooksRepository booksRepository;
 
-    protected List<Book> songs(int offset, int limit) {
+    protected List<Book> books(int offset, int limit) {
         return mongoTemplate.find(new Query().skip(offset).limit(limit), Book.class);
     }
 
     @Override
     public Optional<Book> random() {
-        Optional randomSong = Optional.empty();
+        Optional randomBook = Optional.empty();
         int count = (int) booksRepository.count();
 
         if (count!=0) {
             int offset = random.nextInt(count);
-            List<Book> songs = songs(offset, 1);
-            randomSong = songs.isEmpty() ? Optional.empty() : Optional.of(songs.get(0));
+            List<Book> books = books(offset, 1);
+            randomBook = books.isEmpty() ? Optional.empty() : Optional.of(books.get(0));
         }
-        return randomSong;
+        return randomBook;
     }
 
 

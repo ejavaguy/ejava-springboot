@@ -107,7 +107,7 @@ class BooksCrudRepositoryMethodsNTest {
         // sort: {} projection: {} limit: 1"}}
 
         //then
-        then(result).isNotNull();
+        then(result.isPresent()).isTrue();
         then(result).isPresent();
 
         //when - obtaining the instance
