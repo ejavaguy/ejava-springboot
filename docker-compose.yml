@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  mvn:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ejava-springboot-maven:3.8.2
+    volumes:
+      - ./m2/repository:/root/.m2/repository
+      - ./:/usr/src/mymaven
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /usr/src/mymaven
