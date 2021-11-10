@@ -11,25 +11,20 @@
         <relativePath/>
     </parent>
 
-    <groupId>info.ejava-student.assignments.race</groupId>
-    <artifactId>race-starters</artifactId>
+    <groupId>info.ejava-student.assignment5.db.race</groupId>
+    <artifactId>assignment5-race-db</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>EJava Student::Assignments::Race</name>
+    <name>EJava Student::Assignment5::DB::Race Root</name>
 
     <modules>
-      <module>assignment0-race-javaapp</module>
-      <module>assignment0-race-bootapp</module>
-      <module>assignment1-race-propertysource</module>
-      <module>assignment1-race-beanfactory</module>
-      <module>assignment1-race-configprops</module>
-      <module>assignment1-race-autoconfig</module>
-      <module>assignment1-race-logging</module>
-      <module>assignment1-race-testing</module>
-      <module>assignment2-race-api</module>
-      <module>assignment3-race-security</module>
-      <module>assignment5-race-db</module>
+        <module>race-db-app</module>
     </modules>
+
+    <properties>
+        <ejava.version>6.0.0-SNAPSHOT</ejava.version>
+    </properties>
+
 
     <repositories>
         <repository>

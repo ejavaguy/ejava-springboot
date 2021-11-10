@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>info.ejava-student.assignment5.db.race</groupId>
+        <artifactId>assignment5-race-db</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>race-db-app</artifactId>
+    <name>EJava Student::Assignment5::DB::Race App</name>
+
+    <properties>
+      <api.groupId>info.ejava-student.assignment2.api.race</api.groupId>
+      <api.version>1.0-SNAPSHOT</api.version>
+      <security.groupId>info.ejava-student.assignment3.security.race</security.groupId>
+      <security.version>1.0-SNAPSHOT</security.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+-->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>${security.groupId}</groupId>
+            <artifactId>secure-race-app</artifactId>
+            <version>${security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${api.groupId}</groupId>
+            <artifactId>race-app</artifactId>
+            <version>${api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${api.groupId}</groupId>
+            <artifactId>race-registration-client</artifactId>
+            <version>${api.version}</version>
+        </dependency>
+-->
+        <dependency>
+            <groupId>info.ejava.assignments.security.race</groupId>
+            <artifactId>race-support-security-svc</artifactId>
+            <version>${ejava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.ejava.examples.common</groupId>
+            <artifactId>ejava-web-util</artifactId>
+            <version>${ejava.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
