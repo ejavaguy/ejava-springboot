@@ -14,4 +14,8 @@ services:
 #    ports:
 #      - "27017"
 
+#useful commands
+#docker-compose up -d
+#docker-compose exec postgres psql -U postgres
 #docker-compose exec mongodb mongo -u admin -p secret
+#docker-compose down
