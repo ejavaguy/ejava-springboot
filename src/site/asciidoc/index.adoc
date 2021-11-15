@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-11-17: Updated DB TODOs
 * 2021-11-10: Published Database notes and assignment 5
 * 2021-11-03: Published Deployment and Container notes and assignment 4
 * 2021-10-25: Published AOP notes and AOP portion of assignment 3
@@ -48,6 +49,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/db/db-mongo/mongo-book-example[Mongo Book example]
 ** complete link:coursedocs/content/html_single/assignment5-race-db-notes.html[API Assignment 5].
 ** assignment 5 due by Dev12, 6am
+////
 
 * week12: JPA Mapping: JPA Repository (cont), Mongo Mapping: MongoDB, MongoTemplate
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
@@ -56,23 +58,23 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 ** work on link:coursedocs/content/html_single/assignment5-race-db-notes.html[API Assignment 5].
 ** assignment 4 due by Nov21, 6am
 ** assignment 5 due by Dev12, 6am
-////
-
-* week11: JPA Mapping: RDBMS, JPA, JPA Repository
-** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
-** review https://github.com/ejavaguy/ejava-springboot/tree/master/db/db-jpa/jpa-song-example[JPA Song example]
-** begin link:coursedocs/content/html_single/assignment5-race-db-notes.html[API Assignment 5].
-** assignment 4 due by Nov21, 6am
-** assignment 5 due by Dev12, 6am
 
 
 [id="completed"]
 === Things you should have completed!
 
+* week11: JPA Mapping: RDBMS, JPA, JPA Repository
+** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/db/db-jpa/jpa-song-example[JPA Song example]
+** started link:coursedocs/content/html_single/assignment5-race-db-notes.html[API Assignment 5].
+** assignment 4 due by Nov21, 6am
+** assignment 5 due by Dev12, 6am
+
+
 * week10: Containers and Deployments
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-container/docker-hello-example[Heroku/Docker Hello example]
-** begin link:coursedocs/content/html_single/assignment4-race-deployments-notes.html[API Assignment 4].
+** complete link:coursedocs/content/html_single/assignment4-race-deployments-notes.html[API Assignment 4].
 ** assignment 3 due by Nov07, 6am
 ** assignment 4 due by Nov21, 6am
 
