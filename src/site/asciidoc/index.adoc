@@ -11,7 +11,7 @@ New material will be posted weekly as the semester advances.
 If you are looking for a version of the JavaEE content from previous semesters, refer to http://webdev.jhuep.com/%7ejcs/legacy-ejava-javaee[http://webdev.jhuep.com/~jcs/legacy-ejava-javaee]
 
 Legal Disclaimer: The information and opinions expressed within the materials located on this site are the personal contributions of Jim Stafford. 
-Content published here is not reviewed or approved by my employers (The Johns Hopkins University and GDIT/Praxis Engineering) before it is posted and does not necessarily represent the views and opinions of my employers.
+Content published here is not reviewed or approved by my employers (The Johns Hopkins University and Raytheon I&S) before it is posted and does not necessarily represent the views and opinions of my employers.
 
 [id=whatsnew]
 ==== What's New
