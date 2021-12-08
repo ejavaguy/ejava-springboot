@@ -28,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.xml.Jaxb2XmlDecoder;
 import org.springframework.http.codec.xml.Jaxb2XmlEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -39,6 +40,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,7 +83,9 @@ public class SongsControllerNTest {
                 .codecs(conf->{
             conf.defaultCodecs().jaxb2Encoder(new Jaxb2XmlEncoder());
             conf.defaultCodecs().jaxb2Decoder(new Jaxb2XmlDecoder());
-        }).build();
+        })
+                .responseTimeout(Duration.ofHours(1))
+                .build();
     }
 
     @Test

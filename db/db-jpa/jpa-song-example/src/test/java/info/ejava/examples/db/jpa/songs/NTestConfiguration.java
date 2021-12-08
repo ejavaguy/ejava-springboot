@@ -16,13 +16,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.xml.Jaxb2XmlDecoder;
 import org.springframework.http.codec.xml.Jaxb2XmlEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +44,8 @@ public class NTestConfiguration {
 
     @Bean
     public WebClient webClient(WebClient.Builder builder) {
+        //lengthy timeout used for stepping thru debugger
+        HttpClient httpClient = HttpClient.create().responseTimeout(Duration.ofHours(1));
         return builder
                 .filter(WebClientLoggingFilter.requestFilter())
                 .filter(WebClientLoggingFilter.responseFilter())
@@ -48,6 +53,7 @@ public class NTestConfiguration {
                     conf.defaultCodecs().jaxb2Encoder(new Jaxb2XmlEncoder());
                     conf.defaultCodecs().jaxb2Decoder(new Jaxb2XmlDecoder());
                 }).build())
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
 
