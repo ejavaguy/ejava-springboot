@@ -16,6 +16,7 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id=whatsnew]
 ==== What's New
 
+* 2021-12-08: Published Validation notes
 * 2021-12-01: Updated DB TODOs
 * 2021-11-17: Updated DB TODOs
 * 2021-11-10: Published Database notes and assignment 5
@@ -39,22 +40,21 @@ Content published here is not reviewed or approved by my employers (The Johns Ho
 [id="todo"]
 === Class To Do
 
-////
-* week14: Validation, Heroku Deployments
+* week14: Heroku DB Deployments, Validation
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/db/validation/validation-contact-example[Validation Contact example]
+** review https://github.com/ejavaguy/ejava-springboot/tree/master/svc/svc-container/dockercompose-votes-example[DockerCompose Votes example]
 ** assignment 5 due by Dev12, 6am
-////
+** Congrats! Enjoy the end of the semester and holidays.
+
+[id="completed"]
+=== Things you should have completed!
 
 * week13: Mongo Mapping: Mongo Repository, Applicaton End-to-End
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
 ** review https://github.com/ejavaguy/ejava-springboot/tree/master/db/db-mongo/mongo-book-example[Mongo Book example]
 ** complete link:coursedocs/content/html_single/assignment5-race-db-notes.html[API Assignment 5].
 ** assignment 5 due by Dec12, 6am
-
-
-[id="completed"]
-=== Things you should have completed!
 
 * week12: JPA Mapping: JPA Repository (cont), Mongo Mapping: MongoDB, MongoTemplate
 ** review link:coursedocs/content/html_single/jhu784-syllabus.html#jhu784-syllabus-schedule[Lecture notes]
